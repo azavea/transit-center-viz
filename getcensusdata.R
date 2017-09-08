@@ -9,6 +9,7 @@ readRenviron("~/.Renviron")
 # Check to see that the expected key is output in your R console
 Sys.getenv("CENSUS_KEY")
 
+# Load censusapi library
 library(censusapi)
 
 # Create variable data frame from csv file

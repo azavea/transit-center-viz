@@ -1,0 +1,35 @@
+No vehicle: Table S2504_C01_027E
+1 vehicle available: Table S2504_C01_028E
+2 vehicles available: Table S2504_C01_029E
+3 or more vehicles available: Table S2504_C01_030E
+Average Household Size: Table S0501_C01_026E
+Percent in 1 unit structure: Table S1101_C01_016E
+Percent in 2 or more unit structures: Table S1101_C01_017E
+Median Household Income: Table B19013_001E
+Total Population Foreign Born: Table DP02_0092E
+Percent White: Table DP05_0032PE
+Percent Black: Table DP05_0033PE
+Percent AI/AN: Table DP05_0034PE
+Percent Asian: Table DP05_0039PE
+Percent NH/PI: Table DP05_0047PE
+Percent Some Other Race: Table DP05_0052PE
+Percent 2 or more Races: DP05_0053PE
+Percent Hispanic/Latino of any race: Table DP05_0066PE
+Workers Age 16 and Over: Table DP03_0018E
+Percent Car/Truck/Van Drove Alone: Table DP03_0019PE
+Percent Car/Truck/Van Carpooled: Table DP03_0020PE
+Percent Public Transit: Table DP03_0021PE
+Percent Walked: Table DP03_0022PE
+Percent Other Means: Table DP03_0023PE
+Percent Worked at Home: Table DP03_0024PE
+Mean Travel Time to Work: Table DP03_0025E
+Employment Total: Table DP03_0026E
+Percent Private Wage and Salary Workers: Table DP03_0047PE
+Percent Government Workers: Table DP03_0048PE
+Percent Self-Employed: Table DP03_0049PE
+Unemployment Rate: Table DP03_0009PE
+Occupation - Management, business, science, and arts occupations: Table DP03_0027PE
+Occupation - Service Occupations: TableDP03_0028PE
+Occupation - Sales and Office: Table DP03_0029PE
+Occupation - Natural Resources , Construction, Maintenance: Table DP03_0030PE
+Occupation - Production, transportation, and material moving occupations: Table DP03_0031PE

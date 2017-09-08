@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ,variable,table
 1,Name,NAME
 2,Total Population,DP02_0086E
@@ -44,7 +43,7 @@
 42,Occupation - Sales and Office,DP03_0029PE
 43,"Occupation - Natural Resources , Construction, Maintenance",DP03_0030PE
 44,"Occupation - Production, transportation, and material moving occupations",DP03_0031PE
-=======
+Err:510,,
 ,variable,table
 1,Name,NAME
 2,Total Population,DP02_0086E
@@ -90,4 +89,4 @@
 42,Occupation - Sales and Office,DP03_0029PE
 43,"Occupation - Natural Resources , Construction, Maintenance",DP03_0030PE
 44,"Occupation - Production, transportation, and material moving occupations",DP03_0031PE
->>>>>>> 571c2190414c3963acb7e0708289ca2d9046cc4c
+>>>>>>> 571c2190414c3963acb7e0708289ca2d9046cc4c,,

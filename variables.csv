@@ -1,4 +1,4 @@
-,variable,table
+row,variable,table
 1,Name,NAME
 2,Total Population,DP02_0086E
 3,No vehicle,DP04_0058PE
@@ -43,50 +43,3 @@
 42,Occupation - Sales and Office,DP03_0029PE
 43,"Occupation - Natural Resources , Construction, Maintenance",DP03_0030PE
 44,"Occupation - Production, transportation, and material moving occupations",DP03_0031PE
-Err:510,,
-,variable,table
-1,Name,NAME
-2,Total Population,DP02_0086E
-3,No vehicle,DP04_0058PE
-4,1 vehicle available,DP04_0059PE
-5,2 vehicles available,DP04_0060PE
-6,3 or more vehicles available,DP04_0061PE
-7,Total Households,DP02_0001E
-8,Average Household Size,DP02_0015E
-9,Total Housing Units,DP04_0006E
-10,Total 1 unit detached,DP04_0007E
-11,Total 1 unit attached,DP04_0008E
-12,Total 2 units,DP04_0009E
-13,Total 3 or 4 units,DP04_0010E
-14,Total 5 to 9 units,DP04_0011E
-15,Total 10 to 19 units,DP04_0012E
-16,Total 20 or more units,DP04_0013E
-17,Median Household Income,DP03_0062E
-18,Total Population Foreign Born,DP02_0092E
-19,Percent White,DP05_0032PE
-20,Percent Black,DP05_0033PE
-21,Percent AI/AN,DP05_0034PE
-22,Percent Asian,DP05_0039PE
-23,Percent NH/PI,DP05_0047PE
-24,Percent Some Other Race,DP05_0052PE
-25,Percent 2 or more Races,DP05_0053PE
-26,Percent Hispanic/Latino of any race,DP05_0066PE
-27,Workers Age 16 and Over,DP03_0018E
-28,Percent Car/Truck/Van Drove Alone,DP03_0019PE
-29,Percent Car/Truck/Van Carpooled,DP03_0020PE
-30,Percent Public Transit,DP03_0021PE
-31,Percent Walked,DP03_0022PE
-32,Percent Other Means,DP03_0023PE
-33,Percent Worked at Home,DP03_0024PE
-34,Mean Travel Time to Work,DP03_0025E
-35,Employment Total,DP03_0026E
-36,Percent Private Wage and Salary Workers,DP03_0047PE
-37,Percent Government Workers,DP03_0048PE
-38,Percent Self-Employed,DP03_0049PE
-39,Unemployment Rate,DP03_0009PE
-40,"Occupation - Management, business, science, and arts occupations",DP03_0027PE
-41,Occupation - Service Occupations,DP03_0028PE
-42,Occupation - Sales and Office,DP03_0029PE
-43,"Occupation - Natural Resources , Construction, Maintenance",DP03_0030PE
-44,"Occupation - Production, transportation, and material moving occupations",DP03_0031PE
->>>>>>> 571c2190414c3963acb7e0708289ca2d9046cc4c,,

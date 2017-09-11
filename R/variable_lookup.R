@@ -7,7 +7,7 @@
 ##    - export as csv
 ##    
 ## DATE: 09/05/17
-## AUTHOR: Simon Kassel
+## AUTHOR(S): Simon Kassel
 ###########################################################################
 
 # packages

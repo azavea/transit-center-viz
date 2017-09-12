@@ -14,6 +14,8 @@
 library(tidyverse)
 library(sf)
 
+source("R/functions.R")
+
 # ntd descriptor vars
 exp <- read.csv("data/ntd/expenses/output/expense_vars.csv", 
                 stringsAsFactors = FALSE) %>%
@@ -47,7 +49,7 @@ write.csv(ntd_vars, "data/r_output/ntd_variables.csv")
 
 load("data/spatial/output/spatial_data.Rdata")
 
-ag_sf <- ag_sf %>%
+ag_with_geo <- ag_with_geo %>%
   mutate(ntdid = clean_ntdid(ntdid))
 
 ag_with_ntd <- right_join(ag_sf, ntd_vars)

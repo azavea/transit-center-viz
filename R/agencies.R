@@ -17,6 +17,7 @@ library(sf)
 library(tidyverse)
 library(tigris)
 library(tidycensus)
+library(stringr)
 
 source("R/functions.R")
 
@@ -44,7 +45,10 @@ for (f in dir() %>% .[grepl("^cb_..*zip$", .)]) {
 ag <- read.csv("data/spatial/input/agencies.csv") %>%
   select(ntdid, name, address = Address.Line.1, city = City, 
          state = State, zip = Zip.Code) %>%
-  mutate(full_adr = paste0(address, ", ", city, ", ", state, " ", zip))
+  mutate(full_adr = paste0(address, ", ", city, ", ", state, " ", zip),
+         ntdid = clean_ntdid(ntdid)) %>%
+  group_by(ntdid) %>%
+  summarise_all(first)
 
 ag <- ag %>%
   filter(state %in% states)
@@ -76,6 +80,7 @@ tracts_and_msas <- st_join(
   suffix = c(".tracts", ".msa"))
 
 # join geographic data to agencies
-ag_with_geo <- st_join(ag_sf, tracts_and_msas)
+ag_with_geo <- st_join(ag_sf, tracts_and_msas) %>%
+  select(-variable, -estimate, -moe, -CSAFP, -AFFGEOID, -LSAD, -ALAND, -AWATER)
 
 save(tracts, msas, ag_sf, tracts_and_msas, ag_with_geo, file = "data/spatial/output/spatial_data.Rdata")

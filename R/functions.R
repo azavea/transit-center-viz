@@ -93,3 +93,16 @@ download_shapefile <- function(url, path, name) {
   sp <- st_read(paste0(ex_dir, "/", file))
   return(sp)
 }
+
+
+# TODO: documentation
+clean_ntdid <- function(strings) {
+  
+  if (is.factor(strings)) {
+    strings <- as.character(strings)
+  }
+  
+  gsub("-.*", "", strings) %>%
+    str_pad(4, "left", "0") %>%
+    return
+}

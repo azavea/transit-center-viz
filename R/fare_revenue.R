@@ -13,6 +13,7 @@
 library(tidyverse)
 library(readxl)
 library(RCurl)
+library(stringr)
 
 # url prefix for all files from ntd
 url_start <- "https://www.transit.dot.gov/sites/fta.dot.gov/files/"
@@ -51,7 +52,7 @@ files <- dir("data/ntd/revenue/input")
 read_excel_revenue <- function(file) {
   
   # define file path
-  file_path <- paste0("data/ntd/revenue/input", file)
+  file_path <- paste0("data/ntd/revenue/input/", file)
   
   # extract year as a string
   year <- substr(file, 9, 12)
@@ -107,7 +108,8 @@ read_excel_revenue <- function(file) {
 
 
 # apply function over each file
-all_revenue <- map_df(dir("data/ntd/revenue/input"), read_excel_revenue) %>%
+all_revenue <- map_df(dir("data/ntd/revenue/input/"), read_excel_revenue) %>%
+  mutate(ntdid = clean_ntdid(ntdid)) %>%
   group_by(ntdid, year) %>%
   summarise(fares = sum(fares))
 

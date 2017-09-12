@@ -2,7 +2,7 @@
 ## PROJECT: Transit Center
 ## 
 ## SCRIPT PURPOSE: Combine census data with ntd data to create spatial
-##  objeects for carto
+##  objects for carto
 ##    - 
 ##    - 
 ##    - 
@@ -14,25 +14,21 @@
 library(tidyverse)
 library(sf)
 
-# load data from disparate scripts
-
-read_ntd_vars <- function(file) {
-  read.csv(file) %>%
-    mutate(ntdid = as.character(ntdid)) %>%
-    return
-}
-
 # ntd descriptor vars
-exp <- read_ntd_vars("data/ntd/expenses/output/expense_vars.csv") %>%
+exp <- read.csv("data/ntd/expenses/output/expense_vars.csv", 
+                stringsAsFactors = FALSE) %>%
   group_by(ntdid, year) %>%
   summarise(total_expenses = sum(total_expenses)) %>%
-  filter(ntdid != "")
+  filter(ntdid != "0000")
 
-svc <- read_ntd_vars("data/ntd/service/output/service_vars.csv") 
-rev <- read_ntd_vars("data/ntd/revenue/output/revenue_vars.csv") 
+svc <- read.csv("data/ntd/service/output/service_vars.csv",
+                stringsAsFactors = FALSE) 
+rev <- read.csv("data/ntd/revenue/output/revenue_vars.csv",
+                stringsAsFactors = FALSE) 
 
 # table to reference names of each agency
-lookup <- read_ntd_vars("data/spatial/output/name_lookup.csv")
+lookup <- read.csv("data/spatial/output/name_lookup.csv",
+                   stringsAsFactors = FALSE)
 
 # join together
 ntd_vars <- left_join(exp, svc) %>%
@@ -40,7 +36,22 @@ ntd_vars <- left_join(exp, svc) %>%
   right_join(lookup, .) %>%
   select(-starts_with("X"))
 
+ntd_vars <- ntd_vars %>%
+  mutate(average_speed = revenue_miles / revenue_hours,
+         avg_fare = fares / upt,
+         farebox_recovery = fares / total_expenses)
+
+write.csv(ntd_vars, "data/r_output/ntd_variables.csv")
+
+# spatial data ------------------------------------------------------------
 
 load("data/spatial/output/spatial_data.Rdata")
 
-head(ag_sf)
+ag_sf <- ag_sf %>%
+  mutate(ntdid = clean_ntdid(ntdid))
+
+ag_with_ntd <- right_join(ag_sf, ntd_vars)
+
+st_write(ag_with_ntd, "data/r_output/agencies_with_ntd_variables.geojson")
+
+

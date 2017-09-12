@@ -13,6 +13,7 @@
 
 # packages
 library(tidyverse)
+library(stringr)
 
 # define the directory where the csvs are 
 directory <- "data/ntd/expenses/input/"
@@ -24,7 +25,9 @@ files <- get_csvs(directory)
 name_lookup <- read.csv(paste0(directory, files[9])) %>%
   select(ntdid, name) %>%
   na.omit %>%
-  distinct
+  distinct %>%
+  mutate_all(as.character) %>%
+  mutate(ntdid = clean_ntdid(ntdid))
 
 # write to csv
 write.csv(name_lookup, "data/spatial/output/name_lookup.csv")
@@ -42,7 +45,8 @@ read <- function(fname, dir) {
 }
 
 # apply over all csvs
-exp <- map_df(files, read, dir = directory)
+exp <- map_df(files, read, dir = directory) %>%
+  mutate(ntdid = clean_ntdid(ntdid))
 
 # export as one compiled csv
 write.csv(exp, "data/ntd/expenses/output/expense_vars.csv")

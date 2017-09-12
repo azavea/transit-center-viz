@@ -15,6 +15,7 @@
 # packages
 library(readxl)
 library(tidyverse)
+library(stringr)
 
 # helper functions
 source("R/functions.R")
@@ -58,6 +59,15 @@ read_excel_service <- function(file) {
                revenue_hours = `actual vehicles/ passenger car revenue hours`, 
                upt = `unlinked passenger trips (upt)`)
 
+    } else if ("5 digit ntdid" %in% names(ex)) {
+      
+      ex <- ex %>%
+        select(ntdid = `4 digit ntdid`,
+               time_period = `time period`, 
+               revenue_miles = `total actual revenue miles__1`, 
+               revenue_hours = `total actual revenue hours__1`,
+               upt = `unlinked passenger trips (upt)`)
+      
     } else if ("agency" %in% names(ex)) {
       
       ex <- ex %>%
@@ -67,10 +77,10 @@ read_excel_service <- function(file) {
                revenue_hours = `vehicle revenue hours`,
                upt = `unlinked passenger trips`)
       
-    } else if ("5 digit ntdid" %in% names(ex)) {
+    } else if ("legacy ntd id" %in% names(ex)) {
       
       ex <- ex %>%
-        select(ntdid = `5 digit ntdid`,
+        select(ntdid = `legacy ntd id`,
                time_period = `time period`, 
                revenue_miles = `total actual revenue miles`, 
                revenue_hours = `total actual revenue hours`,
@@ -103,13 +113,14 @@ read_excel_service <- function(file) {
   return(ex)
 }
 
+
 # apply function over each file
 all_service <- map_df(dir("data/ntd/service/input/"), read_excel_service) %>%
   filter(time_period == "Annual Total") %>%
   select(-time_period) %>%
+  mutate(ntdid = clean_ntdid(ntdid)) %>%
   group_by(ntdid, year) %>%
-  summarise_all(sum)
-all_service$ntdid <- as.numeric(all_service$ntdid)
+  summarise_all(sum) 
 
 # export as csv
 write_csv(all_service, "data/ntd/service//output/service_vars.csv")

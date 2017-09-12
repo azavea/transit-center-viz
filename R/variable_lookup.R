@@ -14,7 +14,7 @@
 library(tidyverse)
 
 # read .txt
-vars <- read.csv("variables.txt", sep = ":", header = FALSE, stringsAsFactors = FALSE)
+vars <- read.csv("data/spatial/inputvariables.txt", sep = ":", header = FALSE, stringsAsFactors = FALSE)
 
 # change names
 names(vars) <- c("variable", "table")
@@ -25,4 +25,4 @@ vars <- vars %>%
   mutate_all(trimws)
 
 # write to csv
-write.csv(vars, "variables.csv")
+write.csv(vars, "data/spatial/input/variables.csv")

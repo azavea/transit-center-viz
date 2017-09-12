@@ -24,7 +24,7 @@ source("R/functions.R")
 states <- unique(fips_codes$state)[1:51]
 
 # load all MSAs
-msas <- download_shapefile(url = msa_url, path="data/spatial", name = "csa")
+msas <- download_shapefile(url = msa_url, path="data/spatial/input", name = "csa")
 
 # load all census tracts
 tracts <- reduce(
@@ -35,8 +35,13 @@ tracts <- reduce(
   rbind
 )
 
+# remove zip files
+for (f in dir() %>% .[grepl("^cb_..*zip$", .)]) {
+  file.remove(f)
+}
+
 # read and clean agency data
-ag <- read.csv("data/agencies.csv") %>%
+ag <- read.csv("data/spatial/input/agencies.csv") %>%
   select(ntdid, name, address = Address.Line.1, city = City, 
          state = State, zip = Zip.Code) %>%
   mutate(full_adr = paste0(address, ", ", city, ", ", state, " ", zip))
@@ -73,4 +78,4 @@ tracts_and_msas <- st_join(
 # join geographic data to agencies
 ag_with_geo <- st_join(ag_sf, tracts_and_msas)
 
-save(tracts, msas, ag_sf, tracts_and_msas, ag_with_geo, file = "data/spatial/spatial_data.Rdata")
+save(tracts, msas, ag_sf, tracts_and_msas, ag_with_geo, file = "data/spatial/output/spatial_data.Rdata")

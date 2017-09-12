@@ -1,10 +1,7 @@
 ###########################################################################
 ## PROJECT: Transit Center
 ## 
-## SCRIPT PURPOSE: Helper functions
-##    - 
-##    - 
-##    - 
+## SCRIPT PURPOSE: R helper functions
 ##    
 ## DATE: 09/05/17
 ## AUTHOR(S): Simon Kassel

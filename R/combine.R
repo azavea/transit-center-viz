@@ -3,9 +3,10 @@
 ## 
 ## SCRIPT PURPOSE: Combine census data with ntd data to create spatial
 ##  objects for carto
-##    - 
-##    - 
-##    - 
+##    - Join all ntd datasets
+##    - Create new ntd variables
+##    - Join ntd data to msas
+##    - widen ntd data
 ##    
 ## DATE: 09/11/17
 ## AUTHOR: Simon Kassel

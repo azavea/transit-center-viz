@@ -24,8 +24,13 @@ source("R/functions.R")
 # remove territories
 states <- unique(fips_codes$state)[1:51]
 
+# define url to download msas from
+msa_url <- "http://www2.census.gov/geo/tiger/TIGER2015/CBSA/tl_2015_us_cbsa.zip"
+
 # load all MSAs
-msas <- download_shapefile(url = msa_url, path="data/spatial/input", name = "csa")
+msas <- download_shapefile(
+  url = msa_url, 
+  path="data/spatial/input", name = "csa")
 
 # load all census tracts
 tracts <- reduce(
@@ -43,44 +48,37 @@ for (f in dir() %>% .[grepl("^cb_..*zip$", .)]) {
 
 # read and clean agency data
 ag <- read.csv("data/spatial/input/agencies.csv") %>%
-  select(ntdid, name, address = Address.Line.1, city = City, 
+  select(ntdid, name, city = City, 
          state = State, zip = Zip.Code) %>%
-  mutate(full_adr = paste0(address, ", ", city, ", ", state, " ", zip),
+  filter(state %in% states) %>%
+  mutate(full_adr = paste0(city, ", ", state, " ", zip),
          ntdid = clean_ntdid(ntdid)) %>%
   group_by(ntdid) %>%
   summarise_all(first)
 
-ag <- ag %>%
-  filter(state %in% states)
-
 # geocode transit agencies  
 ag <- cbind(ag, geocode(ag$full_adr))
-
-# clean up the addresses that didn't geocode correctly
-ag_g <- ag %>% 
-  filter(!is.na(lon))
-
-ag_ng <- ag %>%
-  filter(is.na(lon)) %>%
-  select(-lon, -lat) %>%
-  cbind(., geocode(paste(.$state, .$city, .$zip, sep = ", ")))
-
-# complete gecoded agency db
-ag <- rbind(ag_g, ag_ng) %>%
-  select(-full_adr)
   
 # convert data frame to sf
 ag_sf = st_as_sf(ag, coords = c("lon", "lat"), crs = 4269) %>%
   st_transform(crs = st_crs(msas))
 
 # join msa data to tracts
-tracts_and_msas <- st_join(
-  tracts, msas, 
-  join = st_within, 
-  suffix = c(".tracts", ".msa"))
+ag_with_geo <- st_join(
+    ag_sf, msas, 
+    join = st_within, 
+    suffix = c(".ag", ".msa")) %>%
+  st_join(
+    tracts, 
+    join = st_within, 
+    suffix = c(".msa", ".tract")) %>%
+  select(ntdid, name, city, state, zip,
+         GEOID.msa, GEOID.tract, geometry)
 
-# join geographic data to agencies
-ag_with_geo <- st_join(ag_sf, tracts_and_msas) %>%
-  select(-variable, -estimate, -moe, -CSAFP, -AFFGEOID, -LSAD, -ALAND, -AWATER)
+# write msas and tracts
+st_write(msas, "data/r_output/all_msas.geojson")
+st_write(tracts, "data/r_output/all_tracts.geojson")
 
-save(tracts, msas, ag_sf, tracts_and_msas, ag_with_geo, file = "data/spatial/output/spatial_data.Rdata")
+
+save(msas, ag_with_geo, file = "data/spatial/output/spatial_data.Rdata")
+

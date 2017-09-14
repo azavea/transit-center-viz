@@ -106,3 +106,15 @@ clean_ntdid <- function(strings) {
     str_pad(4, "left", "0") %>%
     return
 }
+
+
+# TODO: function documentation
+sum_with_nas <- function(x) {
+  if (TRUE %in% is.na(x)) {
+    s <- sum(na.omit(x)) 
+  } else {
+    s <- sum(x)
+  }
+  s[s==0] <- NA
+  return(s)
+}

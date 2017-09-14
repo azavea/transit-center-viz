@@ -10,10 +10,12 @@
 ## AUTHOR: Simon Kassel
 ###########################################################################
 
-
 # packages
 library(tidyverse)
 library(stringr)
+
+# helper functions
+source("R/functions.R")
 
 # define the directory where the csvs are 
 directory <- "data/ntd/expenses/input/"

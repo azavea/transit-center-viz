@@ -62,4 +62,4 @@ local_import <- function(file_name){
   return(get_response(res))
 }
 
-local_import("data/spatial/spatial_data.Rdata")
+local_import("data/spatial/output/spatial_data.Rdata")

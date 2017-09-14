@@ -41,10 +41,7 @@ lookup <- read.csv("data/spatial/output/name_lookup.csv",
 ntd_vars <- left_join(exp, svc) %>%
   left_join(rev) %>%
   right_join(lookup, .) %>%
-  select(-starts_with("X")) %>%
-  mutate(average_speed = revenue_miles / revenue_hours,
-         avg_fare = fares / upt,
-         farebox_recovery = fares / total_expenses)
+  select(-starts_with("X"))
 
 
 # spatial data ------------------------------------------------------------
@@ -53,7 +50,49 @@ ntd_vars <- left_join(exp, svc) %>%
 load("data/spatial/output/spatial_data.Rdata")
 
 # join ntd_vars to geographic agency data
-ag_long <- right_join(ag_with_geo, ntd_vars)
+ag_long_base <- right_join(ag_with_geo, ntd_vars)
+
+msa_dat <- ag_long_base %>%
+  as.data.frame %>%
+  group_by(GEOID.msa, year) %>%
+  mutate(num_agencies = n_distinct(ntdid)) %>%
+  select(-ntdid, -name, -city, -state, -zip, 
+         -GEOID.tract, -geometry) %>%
+  ungroup %>%
+  group_by(GEOID.msa, year, num_agencies) %>%
+  summarise_all(sum) %>%
+  mutate(average_speed = revenue_miles / revenue_hours,
+         avg_fare = fares / upt,
+         farebox_recovery = fares / total_expenses) %>%
+  ungroup
+
+
+msa_dat_wide <- select(
+  msa_dat, GEOID.msa, num_agencies) %>%
+  unique
+for(y in unique(msa_dat$year)) {
+  temp <- msa_dat %>%
+    filter(year == y) %>%
+    as.data.frame %>%
+    select(GEOID.msa, total_expenses:farebox_recovery)
+  names(temp)[2:ncol(temp)] <- paste("y", y, names(temp)[2:ncol(temp)], sep = ".")
+  msa_dat_wide <- left_join(msa_dat_wide, temp)
+} 
+
+
+msa_dat_wide <- msas %>%
+  select(GEOID.msa = GEOID) %>%
+  right_join(msa_dat_wide)
+
+# write msa dataset
+write_sf(msa_dat_wide, "data/r_output/msas_with_summarized_agency_data_wide.geojson")
+
+# summarise to msa level --------------------------------------------------
+
+ag_long <- ag_long_base %>%
+  mutate(average_speed = revenue_miles / revenue_hours,
+         avg_fare = fares / upt,
+         farebox_recovery = fares / total_expenses)
 
 # create wide format dataset
 ag_wide <- select(
@@ -67,7 +106,6 @@ for(y in unique(ag_long$year)) {
   names(temp)[2:ncol(temp)] <- paste("y", y, names(temp)[2:ncol(temp)], sep = ".")
   ag_wide <- left_join(ag_wide, temp)
 } 
-
 
 # census data -------------------------------------------------------------
 

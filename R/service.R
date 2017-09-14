@@ -108,19 +108,21 @@ read_excel_service <- function(file) {
   
   # add year field, unique ad a character var
   ex <- ex %>%
-    mutate(year = year, ntdid = as.character(ntdid))
+    filter(time_period == "Annual Total") %>%
+    select(-time_period) %>%
+    mutate(year = year, ntdid = clean_ntdid(ntdid)) #%>%
   
+  ex <- ex %>% 
+    group_by(ntdid, year) %>%
+    summarise_all(sum_with_nas) 
+
   return(ex)
 }
 
 
 # apply function over each file
-all_service <- map_df(dir("data/ntd/service/input/"), read_excel_service) %>%
-  filter(time_period == "Annual Total") %>%
-  select(-time_period) %>%
-  mutate(ntdid = clean_ntdid(ntdid)) %>%
-  group_by(ntdid, year) %>%
-  summarise_all(sum) 
+all_service <- map_df(dir("data/ntd/service/input/"), read_excel_service) #%>%
+
 
 # export as csv
 write_csv(all_service, "data/ntd/service//output/service_vars.csv")

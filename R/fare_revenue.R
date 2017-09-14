@@ -15,6 +15,9 @@ library(readxl)
 library(RCurl)
 library(stringr)
 
+# helper functions
+source("R/functions.R")
+
 # url prefix for all files from ntd
 url_start <- "https://www.transit.dot.gov/sites/fta.dot.gov/files/"
 

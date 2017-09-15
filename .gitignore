@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 .geocoded_agencies.Rdata
+.queries.sql

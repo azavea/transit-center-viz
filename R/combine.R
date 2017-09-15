@@ -55,11 +55,10 @@ ag_long_base <- right_join(ag_with_geo, ntd_vars)
 msa_dat <- ag_long_base %>%
   as.data.frame %>%
   group_by(GEOID.msa, year) %>%
-  mutate(num_agencies = n_distinct(ntdid)) %>%
   select(-ntdid, -name, -city, -state, -zip, 
          -GEOID.tract, -geometry) %>%
   ungroup %>%
-  group_by(GEOID.msa, year, num_agencies) %>%
+  group_by(GEOID.msa, year) %>%
   summarise_all(sum) %>%
   mutate(average_speed = revenue_miles / revenue_hours,
          avg_fare = fares / upt,
@@ -68,8 +67,9 @@ msa_dat <- ag_long_base %>%
 
 
 msa_dat_wide <- select(
-  msa_dat, GEOID.msa, num_agencies) %>%
+  msa_dat, GEOID.msa) %>%
   unique
+
 for(y in unique(msa_dat$year)) {
   temp <- msa_dat %>%
     filter(year == y) %>%
@@ -80,11 +80,15 @@ for(y in unique(msa_dat$year)) {
 } 
 
 
+# write msa dataset csv
+write.csv(msa_dat_wide, "data/r_output/msas_with_summarized_agency_data_wide.csv")
+msa_dat_wide <- read.csv("data/r_output/msas_with_summarized_agency_data_wide.csv")
+
+
+# write msa dataset geojson
 msa_dat_wide <- msas %>%
   select(GEOID.msa = GEOID) %>%
   right_join(msa_dat_wide)
-
-# write msa dataset
 write_sf(msa_dat_wide, "data/r_output/msas_with_summarized_agency_data_wide.geojson")
 
 # summarise to msa level --------------------------------------------------

@@ -59,7 +59,7 @@ msa_dat <- ag_long_base %>%
          -GEOID.tract, -geometry) %>%
   ungroup %>%
   group_by(GEOID.msa, year) %>%
-  summarise_all(sum) %>%
+  summarise_all(sum, na.rm = TRUE) %>%
   mutate(average_speed = revenue_miles / revenue_hours,
          avg_fare = fares / upt,
          farebox_recovery = fares / total_expenses) %>%
@@ -89,7 +89,6 @@ for(y in unique(msa_dat$year)) {
 
 # write msa dataset csv
 write.csv(msa_dat_wide, "data/r_output/msas_with_summarized_agency_data_wide.csv")
-msa_dat_wide <- read.csv("data/r_output/msas_with_summarized_agency_data_wide.csv")
 
 
 # write msa dataset geojson

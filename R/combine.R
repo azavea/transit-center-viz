@@ -65,6 +65,13 @@ msa_dat <- ag_long_base %>%
          farebox_recovery = fares / total_expenses) %>%
   ungroup
 
+msa_dat <- msas %>%
+  as.data.frame %>%
+  select(GEOID.msa = GEOID, name = NAME) %>%
+  
+  right_join(msa_dat)
+
+write.csv(msa_dat, "data/r_output/msas_with_summarized_agency_data_long.csv")
 
 msa_dat_wide <- select(
   msa_dat, GEOID.msa) %>%

@@ -16,7 +16,7 @@ get_names <- function(dat) {
     return
 }
 
-files06 <- files[1:8]
+files06 <- files[9:12]
 names <- c()
 for (i in files06) {
   t <- read.csv(i)
@@ -38,13 +38,18 @@ read_and_select <- function(file) {
   return(dat)
 }
 
-all <- plyr::llply(files, read_and_select)
+
+all <- plyr::llply(files, read_and_select, .progress = "text")
 
 for (f in all) {
-  
   paste0(f$year[1], ', ncol: ', ncol(f)) %>%
     print
-  
 }
 
+names(all[[5]])
+
+files[9]
+
+t <- all[[9]]
+head(t)
 

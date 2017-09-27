@@ -104,7 +104,8 @@ read_excel_revenue <- function(file) {
   ex <- ex %>%
     mutate(year = year, 
            ntdid = as.character(ntdid),
-           fares = as.numeric(fares))
+           fares = as.numeric(fares),
+           mode = as.character(mode))
   
   return(ex)
 }
@@ -113,7 +114,7 @@ read_excel_revenue <- function(file) {
 # apply function over each file
 all_revenue <- map_df(dir("data/ntd/revenue/input/"), read_excel_revenue) %>%
   mutate(ntdid = clean_ntdid(ntdid)) %>%
-  group_by(ntdid, year) %>%
+  group_by(ntdid, year, mode) %>%
   summarise(fares = sum(fares))
 
 # export as csv

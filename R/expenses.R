@@ -39,7 +39,7 @@ read <- function(fname, dir) {
   year <- substr(fname, 5, 8) %>% as.numeric
   fpath <- paste0(directory, fname)
   df <- read.csv(fpath, stringsAsFactors = FALSE) %>%
-    select(ntdid, expense_type = exp_type, total_expenses = total) %>%
+    select(ntdid, mode, expense_type = exp_type, total_expenses = total) %>%
     mutate(total_expenses = dol_to_numeric(total_expenses),
            ntdid = as.character(ntdid),
            year = year)

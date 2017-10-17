@@ -223,3 +223,5 @@ write.csv(cen_met_long, "data/r_output/census_vars_metro_areas_long.csv")
 write.csv(cen_met_wide, "data/r_output/census_vars_metro_areas_wide.csv")
 write.csv(cen_tract_long, "data/r_output/census_vars_tracts_long.csv")
 
+
+

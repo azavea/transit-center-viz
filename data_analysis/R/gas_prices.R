@@ -31,3 +31,6 @@ pr_2006_2015$gp_13 <- with(pr_2006_2015, pr_2006_2015$`2013` * 5.062 / 42)
 pr_2006_2015$gp_14 <- with(pr_2006_2015, pr_2006_2015$`2014` * 5.060 / 42)
 
 pr_2006_2015$gp_15 <- with(pr_2006_2015, pr_2006_2015$`2015` * 5.060 / 42)
+
+# Write data frame of gas prices to csv in output directory
+write.csv(pr_2006_2015, file = "data/r_output/gas_prices_2006-2015.csv")

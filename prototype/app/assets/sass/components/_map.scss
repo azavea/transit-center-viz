@@ -1,0 +1,52 @@
+.map {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-top: 5.5rem;
+  @media (max-width: 900px) {
+    padding: 0;
+    margin-top: 0;
+  }
+}
+
+.map-inner {
+  flex: 1;
+  width: 100%;
+
+  @media (max-width: 900px) {
+
+  }
+}
+
+.map-toolbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 25rem;
+  z-index: 2000;
+}
+
+.map-toolbar--section {
+  flex: 1;
+  padding: 10px;
+
+  select,
+  .form-item {
+    flex: 1;
+    margin: 0 5px;
+    -moz-appearance: none;
+  }
+}
+
+.leaflet-control-container {
+  .leaflet-control {
+    border-color: black !important;
+
+    a {
+      border-color: black !important;
+    }
+  }
+}

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico?" type="image/x-icon">
+
+  	<title>Transit Center</title>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,400i" rel="stylesheet">
+  	<link rel="stylesheet" href="assets/css/main.css">
+  </head>
+  <body>
+  
+  <!-- Navbar -->
+  <div class="main-nav">
+		<div class="nav-section primary">
+		  <h1 class="logo">
+			<span>Transit Center</span>
+		  </h1>
+		</div>
+		<div class="nav-section secondary">
+		  <nav>
+			<a class="btn btn-nav" data-toggle="modal" href="#modal">Learn more</a>
+		  </nav>
+		</div>
+  </div>
+  <!-- Navbar -->
+
+
+  <div class="app-container">
+
+	  <!-- Sidebar -->
+	  <div class="sidebar">
+      <!-- Mobile toggle -->
+      <div class="sidebar--toggle hide-desktop">
+        <a href="#" class="h6" id="sidebar-toggle">Sidebar</a>
+      </div>
+      <!-- Mobile toggle -->
+
+      <!-- MSA Selection box -->
+  		<div class="sidebar--header">
+  		  <h3 class="sidebar--title">Visualizations</h3>
+
+        <!-- Using selectize.js -->
+        <select name="" id="" class="msa-select selectize" placeholder="Select an MSA...">
+          <option value="" selected="selected"></option>
+          <optgroup label="Group 1">
+            <option value="1">MSA Option 1</option>
+            <option value="2">MSA Option 2</option>
+            <option value="3">MSA Option 3</option>
+            <option value="4">MSA Option 4</option>
+            <option value="5">MSA Option 5</option>
+          </optgroup>
+          <optgroup label="Group 2">
+            <option value="2-1">MSA Option 2-1</option>
+            <option value="2-2">MSA Option 2-2</option>
+            <option value="2-3">MSA Option 2-3</option>
+            <option value="2-4">MSA Option 2-4</option>
+            <option value="2-5">MSA Option 2-5</option>
+          </optgroup>
+        </select>
+  		</div>
+      <!-- MSA Selection box -->
+  		<div class="sidebar--inner">
+
+  		  <!-- Card of content -->
+  		  <div class="card" data-target="#modalChart" data-toggle="modal">
+    			<div class="card--inner">
+            <!-- Content of cards needs to fall inside
+            of the .card-list > li -->
+    			  <ul class="card--list">
+    				<li>list item 1</li>
+            <li>
+              <ul class="card--list">
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat, animi, dolor. Dicta, expedita, similique, perferendis rem velit mollitia quaerat quae ipsa eos odio amet blanditiis atque. Laboriosam reiciendis esse voluptates?</li>
+              </ul>
+            </li>
+    			  </ul>
+    			</div>
+  		  </div>
+  		  <!-- Card of content -->
+
+  		  <!-- Card of content -->
+  		  <div class="card" data-target="#modalChart" data-toggle="modal">
+    			<div class="card--inner">
+    			  <ul class="card--list">
+    				<li class="card--title">Card Title</li>
+    				<li>List item 1 maybe description</li>
+    				<li>Some more descriptive text</li>
+            <li>
+              <ul class="card--list">
+                <li><img src="http://via.placeholder.com/350x150" alt=""></li>
+              </ul>
+            </li>
+    			  </ul>
+    			</div>
+  		  </div>
+        <!-- Card of content -->
+  		</div>
+	  </div>
+	  <!-- Sidebar -->
+
+	  <!-- Map -->
+	  <div class="map">
+      <!-- Map toolbar -->
+      <div class="map-toolbar">
+        <div class="map-toolbar--section">
+          <!-- Uses Selectize.js -->
+          <select name="" id="" class="selectize" placeholder="Select a toggle">
+            <option value="" selected="selected"></option>
+            <optgroup label="Group 1">
+              <option value="1">Layer Option 1</option>
+              <option value="2">Layer Option 2</option>
+              <option value="3">Layer Option 3</option>
+              <option value="4">Layer Option 4</option>
+              <option value="5">Layer Option 5</option>
+            </optgroup>
+            <optgroup label="Group 2">
+              <option value="2-1">Layer Option 2-1</option>
+              <option value="2-2">Layer Option 2-2</option>
+              <option value="2-3">Layer Option 2-3</option>
+              <option value="2-4">Layer Option 2-4</option>
+              <option value="2-5">Layer Option 2-5</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <!-- Map toolbar -->
+  		<!-- Leaflet map here -->
+  		<div class="map-inner" id="map">
+  		</div>
+	  </div>
+	  <!-- Map -->
+	</div>
+
+  <!-- Modal -->
+	<div class="modal" id="modal" tabindex="-1" role="dialog">
+	  <div class="modal-container">
+  		<div class="modal-close">
+  		  <a href="#" id="close-modal">
+  			 Close
+  		  </a>
+  		</div>
+  		<div class="modal-split">
+  		  <div class="modal-container--inner">
+    			<h1 class="logo text-center">
+    			  <span class="sr-only">Transit Center</span>
+    			  <a href="https://transitcenter.org">
+    				<img src="assets/images/transit-center-logo.png">
+    			  </a>
+    			</h1>
+  		  </div>
+  		</div>
+  		<div class="modal-split background-black color-white">
+  		  <div class="modal-container--inner">
+          <!-- Descriptive content about the app -->
+    			<h4>About this application</h4>
+    			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis asperiores, voluptate corporis, animi corrupti numquam magni eaque eos quasi suscipit harum amet fugit deleniti. Labore, ex molestiae tempora quod dicta!</p>
+  		  </div>
+  		</div>
+	  </div>
+	</div>
+
+  <!-- Modal with chart-->
+  <div class="modal" id="modalChart" tabindex="-1" role="dialog">
+    <div class="modal-container">
+      <div class="modal-close">
+        <a href="#" id="close-modal">
+         Close
+        </a>
+      </div>
+      <div class="modal-split">
+        <div class="modal-container--inner">
+          <!-- Chart -->
+          DYNAMICALLY INPUT CHART HERE
+          <!-- Chart -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+
+
+	<!-- scripts -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
+  <script src="assets/js/selective.js"></script>
+  <script src="assets/js/vendor/util.js"></script>
+  <script src="assets/js/vendor/modal.js"></script>
+	<script src="assets/js/main.js"></script>
+  </body>
+</html>

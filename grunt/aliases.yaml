@@ -6,6 +6,7 @@ default:
 
 build:
   - 'clean:dist'
+  - 'eslint:dist'
   - 'sass:dist'
   - 'postcss:dist'
   - 'copy:dist'

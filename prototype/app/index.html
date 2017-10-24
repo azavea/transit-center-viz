@@ -71,17 +71,17 @@
 
   		  <!-- Card of content -->
   		  <div class="card" data-target="#modalChart" data-toggle="modal">
-    			<div class="card--inner" id="timeSeries">
+    			<div class="card--inner" id="">
             <!-- Content of cards needs to fall inside
             of the .card-list > li -->
-    			  <!-- <ul class="card--list">
+    			  <ul class="card--list">
     				<li>list item 1</li>
             <li>
               <ul class="card--list">
                 <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat, animi, dolor. Dicta, expedita, similique, perferendis rem velit mollitia quaerat quae ipsa eos odio amet blanditiis atque. Laboriosam reiciendis esse voluptates?</li>
               </ul>
             </li>
-    			  </ul> -->
+    			  </ul>
     			</div>
   		  </div>
   		  <!-- Card of content -->
@@ -89,16 +89,8 @@
   		  <!-- Card of content -->
   		  <div class="card" data-target="#modalChart" data-toggle="modal">
     			<div class="card--inner">
-    			  <ul class="card--list">
-    				<li class="card--title">Card Title</li>
-    				<li>List item 1 maybe description</li>
-    				<li>Some more descriptive text</li>
-            <li>
-              <ul class="card--list">
-                <li><img src="http://via.placeholder.com/350x150" alt=""></li>
-              </ul>
-            </li>
-    			  </ul>
+            <!-- TODO: figure out the modal functionality here -->
+            <div id="timeSeries"></div>
     			</div>
   		  </div>
         <!-- Card of content -->
@@ -176,9 +168,9 @@
         </a>
       </div>
       <div class="modal-split">
-        <div class="modal-container--inner">
+        <div class="modal-container--inner", id="timeSeries">
           <!-- Chart -->
-          DYNAMICALLY INPUT CHART HERE
+          <!-- DYNAMICALLY INPUT CHART HERE -->
           <!-- Chart -->
         </div>
       </div>
@@ -199,10 +191,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
   <script src="http://d3js.org/d3.v3.min.js"></script>
 
-
-  <script src="assets/js/cartoSql.js"></script>
-  <!-- <script src="assets/js/timeSeries_function.js"></script> -->
-  <script src="assets/js/timeSeries.js"></script>
+  <script src="assets/js/carto-sql.js"></script>
+  <script src="assets/js/time-series.js"></script>
   <script src="assets/js/main.js"></script>
   </body>
 </html>

@@ -1,4 +1,4 @@
-function timeSeriesObj(htmlElement) {
+function timeSeriesChart() {
 
     /*
      * TODO: add all chart elements
@@ -6,8 +6,6 @@ function timeSeriesObj(htmlElement) {
      *  - title
      *  - etc.
      */
-
-    this.htmlElement = htmlElement;
 
     this.margin = {
         top: 30,
@@ -32,7 +30,7 @@ function timeSeriesObj(htmlElement) {
     this.yAxisRight = d3.svg.axis().scale(this.yR)
         .orient("right").ticks(5);
 
-    this.svg = d3.select(this.htmlElement)
+    this.svg = d3.select("#timeSeries")
         .append("svg")
         .attr("width", this.width + this.margin.left + this.margin.right)
         .attr("height", this.height + this.margin.top + this.margin.bottom)

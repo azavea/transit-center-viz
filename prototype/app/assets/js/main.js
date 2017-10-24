@@ -21,10 +21,10 @@ $(document).ready(function() {
   });
 
 
+
   /*
    * MSA graduated symbol map
    */
-
 
   // Remove objects with an NA value for a particular key
   function removeNAs(geoJson, field) {
@@ -34,8 +34,7 @@ $(document).ready(function() {
     return geoJson;
   }
 
-
-    // temp (sample inputs to be replaced by input from jquery)
+  // temp (sample inputs to be replaced by input from jquery)
   var valueField = "upt_total";
   var msaMap = new cartoSql('msaMap');
 
@@ -72,7 +71,7 @@ $(document).ready(function() {
 
 
   var timeSeriesSql = new cartoSql("timeSeries");
-  tsChart = new timeSeriesObj("#timeSeries");
+  tsChart = new timeSeriesChart();
 
 
   timeSeriesSql.getJson(tsVal, tsMsa).done(function(data) {
@@ -93,4 +92,3 @@ $(document).ready(function() {
 
   //$('#modal').modal()
 });
-var tsChart;

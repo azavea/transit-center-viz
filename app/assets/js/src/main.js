@@ -12,6 +12,17 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
     ext: 'png'
 }).addTo(map);
 
+//Zoom thresholds for nationwide layers versus MSA layers
+var zoomNationwide = 9;
+var zoomMSA = 10;
+
+//function to change layer selector options when zoom level changes
+var changeToggle = function (select, layer_options){
+    select.clear();
+    select.clearOptions();
+    select.addOption(layer_options);
+};
+
 $(document).ready(function () {
     /*
     * Mobile sidebar toggle
@@ -28,6 +39,21 @@ $(document).ready(function () {
     $('.selectize').selectize({
         create: true,
         sortField: 'text'
+    });
+
+    //initial option of nationwide layers in layer selector
+    var layerToggle = $('#toggle')[0].selectize;
+    layerToggle.addOption(TCVIZ.Config.nationwide_layers);
+
+    // change layer selector options based on zoom level of the map
+    map.on('zoomend', function () {
+        // console.log(map.getZoom());
+        if (map.getZoom() >= zoomMSA) {
+            changeToggle(layerToggle, TCVIZ.Config.MSA_layers);
+        }
+        if (map.getZoom() <= zoomNationwide) {
+            changeToggle(layerToggle, TCVIZ.Config.nationwide_layers);
+        }
     });
 
     //$('#modal').modal()

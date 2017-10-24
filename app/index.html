@@ -76,7 +76,7 @@
             <option value="28">Nashville-Davidson–Murfreesboro–Franklin, TN</option>
             <option value="29">New Orleans-Metairie, LA</option>
             <option value="30">New York-Newark-Bridgeport, NY-NJ-PA</option>
-            <option value="31"></option>Oklahoma City, OK</option>
+            <option value="31">Oklahoma City, OK</option>
             <option value="32">Orlando-Kissimmee-Sanford, FL</option>
             <option value="33">Philadelphia-Camden-Wilmington, PA-NJ-DE-MD</option>
             <option value="34">Phoenix-Mesa-Scottsdale, AZ</option>
@@ -149,22 +149,7 @@
       <div class="map-toolbar">
         <div class="map-toolbar--section">
           <!-- Uses Selectize.js -->
-          <select name="" id="" class="selectize" placeholder="Select a toggle">
-            <option value="" selected="selected"></option>
-            <optgroup label="Group 1">
-              <option value="1">Layer Option 1</option>
-              <option value="2">Layer Option 2</option>
-              <option value="3">Layer Option 3</option>
-              <option value="4">Layer Option 4</option>
-              <option value="5">Layer Option 5</option>
-            </optgroup>
-            <optgroup label="Group 2">
-              <option value="2-1">Layer Option 2-1</option>
-              <option value="2-2">Layer Option 2-2</option>
-              <option value="2-3">Layer Option 2-3</option>
-              <option value="2-4">Layer Option 2-4</option>
-              <option value="2-5">Layer Option 2-5</option>
-            </optgroup>
+          <select name="" id="toggle" class="selectize" placeholder="Select a toggle">
           </select>
         </div>
       </div>
@@ -225,12 +210,14 @@
 
 
 	<!-- scripts -->
+  <script src="assets/js/TCViz.js" type="text/javascript"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
   <script src="assets/js/vendor/selective.js"></script>
   <script src="assets/js/vendor/util.js"></script>
   <script src="assets/js/vendor/modal.js"></script>
+	<script src="assets/js/src/tcviz.js"></script>
 	<script src="assets/js/src/main.js"></script>
   </body>
 </html>

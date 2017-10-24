@@ -10,6 +10,10 @@
   	<title>Transit Center</title>
     <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,400i" rel="stylesheet">
   	<link rel="stylesheet" href="assets/css/main.css">
+
+    <!-- stylesheet for d3 plot -->
+    <link rel="stylesheet" href="assets/css/d3Style.css">
+
   </head>
   <body>
   
@@ -67,17 +71,17 @@
 
   		  <!-- Card of content -->
   		  <div class="card" data-target="#modalChart" data-toggle="modal">
-    			<div class="card--inner">
+    			<div class="card--inner" id="timeSeries">
             <!-- Content of cards needs to fall inside
             of the .card-list > li -->
-    			  <ul class="card--list">
+    			  <!-- <ul class="card--list">
     				<li>list item 1</li>
             <li>
               <ul class="card--list">
                 <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat, animi, dolor. Dicta, expedita, similique, perferendis rem velit mollitia quaerat quae ipsa eos odio amet blanditiis atque. Laboriosam reiciendis esse voluptates?</li>
               </ul>
             </li>
-    			  </ul>
+    			  </ul> -->
     			</div>
   		  </div>
   		  <!-- Card of content -->
@@ -190,6 +194,15 @@
   <script src="assets/js/selective.js"></script>
   <script src="assets/js/vendor/util.js"></script>
   <script src="assets/js/vendor/modal.js"></script>
-	<script src="assets/js/main.js"></script>
+
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+  <script src="assets/js/cartoSql.js"></script>
+  <!-- <script src="assets/js/timeSeries_function.js"></script> -->
+  <script src="assets/js/timeSeries.js"></script>
+  <script src="assets/js/main.js"></script>
   </body>
 </html>

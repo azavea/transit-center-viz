@@ -10,7 +10,7 @@ module.exports = {
             {
                 expand: true,
                 cwd: 'app/assets/js',
-                src: '*',
+                src: '**',
                 dest: 'dist/assets/js/'
             },
             {

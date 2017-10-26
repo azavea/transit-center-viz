@@ -41,6 +41,9 @@ $(document).ready(function () {
     var layerToggle = $('#toggle')[0].selectize;
     layerToggle.addOption(TCVIZ.Config.nationwide_layers);
 
+    //populate list of MSAs in dropdown
+    $('#MSA_toggle')[0].selectize.addOption(TCVIZ.Config.MSA_list);
+
     // change layer selector options based on zoom level of the map
     map.on('zoomend', function () {
         if (map.getZoom() > TCVIZ.Config.zoomThreshold) {

@@ -51,7 +51,7 @@ function cartoSql(element) {
   }
 
   // methods
-  this.getSql = function(valueField, msa = null) {
+  this.getSql = function(valueField, msa) {
     var fields = this.queryElements.vars
       .concat(valueField);
 
@@ -60,14 +60,14 @@ function cartoSql(element) {
       " FROM " +
       this.queryElements.table;
 
-    if (msa != null) {
+    if (msa !== undefined) {
       return sql + " WHERE name='" + msa + "'";
     } else {
       return sql;
     }
   };
 
-  this.getJson = function(valueField, msa = null) {
+  this.getJson = function(valueField, msa) {
     var sql = this.getSql(valueField, msa)
     return this.geojsonClient.execute(sql);
   }

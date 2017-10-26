@@ -38,11 +38,10 @@ $(document).ready(function() {
   var valueField = "upt_total";
   var msaMap = new cartoSql('msaMap');
 
-
   // this shoud be updated according to the 
   msaMap.getJson(valueField).done(function(data) {
-    data = removeNAs(data, valueField);
-    featureGroup = L.geoJson(data, {
+    var data = removeNAs(data, valueField);
+    var featureGroup = L.geoJson(data, {
       pointToLayer: function(feature, latlng) {
         return new L.CircleMarker(latlng, {
           /* 
@@ -71,7 +70,7 @@ $(document).ready(function() {
 
 
   var timeSeriesSql = new cartoSql("timeSeries");
-  tsChart = new timeSeriesChart();
+  var tsChart = new timeSeriesChart();
 
 
   timeSeriesSql.getJson(tsVal, tsMsa).done(function(data) {

@@ -18,16 +18,16 @@ function timeSeriesChart() {
     this.height = 270 - this.margin.top - this.margin.bottom;
 
     this.x = d3.time.scale().range([0, this.width]);
-    this.yL = d3.scale.linear().range([this.height, 0]);
-    this.yR = d3.scale.linear().range([this.height, 0]);
+    this.yScaleLeft = d3.scale.linear().range([this.height, 0]);
+    this.yScaleRight = d3.scale.linear().range([this.height, 0]);
 
     this.xAxis = d3.svg.axis().scale(this.x)
         .orient("bottom").ticks(5);
 
-    this.yAxisLeft = d3.svg.axis().scale(this.yL)
+    this.yAxisLeft = d3.svg.axis().scale(this.yScaleLeft)
         .orient("left").ticks(5);
 
-    this.yAxisRight = d3.svg.axis().scale(this.yR)
+    this.yAxisRight = d3.svg.axis().scale(this.yScaleRight)
         .orient("right").ticks(5);
 
     this.svg = d3.select("#timeSeries")
@@ -65,7 +65,7 @@ function timeSeriesChart() {
                 return this.x(d.year);
             })
             .y(function(d) {
-                return this.yL(d.upt_total);
+                return this.yScaleLeft(d.upt_total);
             });
 
         this.valueline2 = d3.svg.line()
@@ -73,7 +73,7 @@ function timeSeriesChart() {
                 return this.x(d.year);
             })
             .y(function(d) {
-                return this.yR(d[this.field]);
+                return this.yScaleRight(d[this.field]);
             });
     }
 
@@ -82,10 +82,10 @@ function timeSeriesChart() {
         this.x.domain(d3.extent(this.data, function(d) {
             return d.year;
         }));
-        this.yL.domain([0, d3.max(this.data, function(d) {
+        this.yScaleLeft.domain([0, d3.max(this.data, function(d) {
             return Math.max(d.upt_total);
         })]);
-        this.yR.domain([0, d3.max(this.data, function(d) {
+        this.yScaleRight.domain([0, d3.max(this.data, function(d) {
             //return Math.max(d[this.field]);
             /*
              * For some reason it's throwing me an error when 

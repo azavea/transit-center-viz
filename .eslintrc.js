@@ -3,6 +3,9 @@ module.exports = {
         "browser": true,
         "jquery": true
     },
+    "globals": {
+        TCVIZ: true
+    },
     "extends": "eslint:recommended",
     "rules": {
         "indent": [

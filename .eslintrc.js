@@ -4,6 +4,9 @@ module.exports = {
         "jquery": true
     },
     "globals": {
+        _: false,
+        cartodb: false,
+        d3: false,
         TCVIZ: true
     },
     "extends": "eslint:recommended",

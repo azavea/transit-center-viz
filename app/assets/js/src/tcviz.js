@@ -1,3 +1,5 @@
 TCVIZ = {
+    Carto: {},
+    Charts: {},
     Config: {}
 };

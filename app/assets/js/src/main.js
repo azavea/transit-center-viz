@@ -54,5 +54,48 @@ $(document).ready(function () {
         }
     });
 
-    //$('#modal').modal()
+    // MSA graduated symbol map
+
+    // Remove objects with an NA value for a particular key
+    function removeNAs(geoJson, field) {
+        geoJson.features = _.filter(geoJson.features, function(d) {
+            return d.properties[field] != 'NA';
+        });
+        return geoJson;
+    }
+
+    // temp (sample inputs to be replaced by input from jquery)
+    var valueField = 'upt_total';
+    var msaMap = new TCVIZ.Carto.SQL('msaMap');
+
+    // this shoud be updated according to the
+    msaMap.getJson(valueField).done(function(data) {
+        var featureGroup = L.geoJson(removeNAs(data, valueField), {
+            pointToLayer: function(feature, latlng) {
+                return new L.CircleMarker(latlng, {
+                    /*
+                    * TODO: function to scale values
+                    * TODO: timeseries stylesheet interferes with
+                    *  graduated symbols, fix this
+                    */
+                    radius: feature.properties[valueField] / 1000000,
+                    fillOpacity: 0.5,
+                    color: '#0000FF'
+                });
+            }
+        });
+        map.addLayer(featureGroup);
+    });
+
+    // TIME SERIES
+
+    // temp (sample inputs to be replaced by input from jquery)
+    var tsVal = 'average_speed';
+    var tsMsa = 'Boston-Cambridge-Newton, MA-NH';
+    var timeSeriesSql = new TCVIZ.Carto.SQL('timeSeries');
+    var tsChart = new TCVIZ.Charts.TimeSeries();
+
+    timeSeriesSql.getJson(tsVal, tsMsa).done(function(data) {
+        tsChart.plot(data, tsVal);
+    });
 });

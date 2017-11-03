@@ -1,5 +1,11 @@
 TCVIZ.Config = {
     zoomThreshold: 9,
+    ntdField: 'upt_total',
+    censusField: 'popDensity',
+    featureGroup: {},
+    currentMSA: 33,
+    timeSeries: null,
+    sqlConnections: {},
     nationwide_layers: [
         {
             text: 'Total Ridership',

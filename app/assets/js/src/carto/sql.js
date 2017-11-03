@@ -1,4 +1,4 @@
-TCVIZ.Carto.SQL = function (element) {
+TCVIZ.Carto.SQL = function(element) {
     // properties
     this.element = element;
 
@@ -9,13 +9,12 @@ TCVIZ.Carto.SQL = function (element) {
     });
 
     switch (this.element) {
-
     /*
-        * for this chart, we may want to adjust query to bring in
-        * all ntd vars for a given MSA, since the dataset is small
-        * that way we would only need to execute another sql query
-        * when the user updated the MSA
-        */
+         * for this chart, we may want to adjust query to bring in
+         * all ntd vars for a given MSA, since the dataset is small
+         * that way we would only need to execute another sql query
+         * when the user updated the MSA
+         */
     case 'timeSeries':
         this.queryElements = {
             table: 'msa_yearly_transit_vars',
@@ -25,7 +24,7 @@ TCVIZ.Carto.SQL = function (element) {
 
     case 'msaMap':
         this.queryElements = {
-            table: 'msa_change_transit_vars',
+            table: 'msa_change_transit_vars_revised',
             vars: ['the_geom', 'name']
         };
         break;

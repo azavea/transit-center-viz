@@ -1,11 +1,11 @@
-TCVIZ.Charts.TimeSeries = function () {
+TCVIZ.Charts.TimeSeries = function() {
 
     /*
-        * TODO: add all chart elements
-        *  - axis labels
-        *  - title
-        *  - etc.
-        */
+     * TODO: add all chart elements
+     *  - axis labels
+     *  - title
+     *  - etc.
+     */
 
     this.margin = {
         top: 30,
@@ -88,10 +88,10 @@ TCVIZ.Charts.TimeSeries = function () {
         this.yScaleRight.domain([0, d3.max(this.data, function(d) {
             //return Math.max(d[this.field]);
             /*
-                * For some reason it's throwing me an error when
-                * I try to use the 'field' property. Parameterizing
-                * second value field was a workaround.
-                */
+             * For some reason it's throwing me an error when
+             * I try to use the 'field' property. Parameterizing
+             * second value field was a workaround.
+             */
             return Math.max(d[field]);
         })]);
     };
@@ -124,5 +124,10 @@ TCVIZ.Charts.TimeSeries = function () {
             .attr('transform', 'translate(' + this.width + ' ,0)')
             .style('fill', 'red')
             .call(this.yAxisRight);
+    };
+
+    this.clear = function() {
+        // this.svg.remove('g')
+        //     .addr('d', this.valueline2);
     };
 };

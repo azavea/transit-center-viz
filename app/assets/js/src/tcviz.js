@@ -1,5 +1,7 @@
 TCVIZ = {
     Carto: {},
     Charts: {},
-    Config: {}
+    Config: {},
+    State: {},
+    Connections: {}
 };

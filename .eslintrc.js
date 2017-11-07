@@ -6,9 +6,10 @@ module.exports = {
     "globals": {
         _: false,
         cartodb: false,
+        chroma: false,
         d3: false,
-        TCVIZ: true,
-        chroma: false
+        Chart: false,
+        TCVIZ: true
     },
     "extends": "eslint:recommended",
     "rules": {

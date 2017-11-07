@@ -2,21 +2,9 @@ TCVIZ.Carto.SQL = function(element) {
     // properties
     this.element = element;
 
-    this.geojsonClient = new cartodb.SQL({
-        user: 'ridership',
-        format: 'geojson',
-        api_key: '73537cf8a5e88a4f170a0eda73deab782accaee2'
-    });
+    this.geojsonClient = new cartodb.SQL(TCVIZ.Config.SQL);
 
     switch (this.element) {
-
-    case 'timeSeries':
-        this.queryElements = {
-            table: 'msa_yearly_transit_vars',
-            vars: ['name_msa', 'the_geom', 'year', 'upt_total']
-        };
-        break;
-
     case 'msaMap':
         this.queryElements = {
             table: 'msa_change_transit_vars',

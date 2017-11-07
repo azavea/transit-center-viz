@@ -18,17 +18,20 @@ $(document).ready(function() {
     var msaToggle = null;
     var featureGroup = {};
     var nationWide = isNationWide();
+    var nationalYears = _.range(2006, 2016);
+    var censusYears = _.range(2010, 2016);
 
     /*
      Initialize objects
      */
     // Carto connections
     TCVIZ.Connections.msaMap = new TCVIZ.Carto.SQL('msaMap');
-    TCVIZ.Connections.timeSeriesSql = new TCVIZ.Carto.SQL('timeSeries');
+    TCVIZ.Connections.chartSql = new TCVIZ.Carto.ChartSQL('msa_yearly_transit_vars', TCVIZ.Config.SQL);
     TCVIZ.Connections.tractMap = new TCVIZ.Carto.SQL('censusTracts');
 
     // Time Series plot
-    TCVIZ.State.timeseries = new TCVIZ.Charts.TimeSeries();
+    TCVIZ.State.chartOne = new TCVIZ.Charts.TimeSeries('time-series-1', {});
+    TCVIZ.State.chartTwo = new TCVIZ.Charts.TimeSeries('time-series-2', {});
 
     /*
     Initialize
@@ -40,11 +43,12 @@ $(document).ready(function() {
      */
     $('#toggle')[0].selectize.on('change', function() {
         setMap();
-        setTimeSeries();
+        //setTimeSeries();
     });
     $('#MSA_toggle')[0].selectize.on('change', function() {
-        setTimeSeries();
-        setMap();
+        var msaName = msaValToName(msaToggle.items[0]);
+        setTimeSeriesOne(msaName, 'upt_total', 'pop_dens');
+        //setMap();
     });
     map.on('zoomstart', onZoomStart);
     map.on('zoomend', onZoomEnd);
@@ -68,7 +72,7 @@ $(document).ready(function() {
      * Get breaks of a variable
      * @param  {GeoJSON} featureGroup Returned from SQL query
      * @param  {string}  variable     Variable being mapped
-     * @return {array}                An array of quintile breaks for this variable              
+     * @return {array}                An array of quintile breaks for this variable
      */
     function getQuintiles(featureGroup, variable) {
         var varArray = _.map(featureGroup.features,
@@ -131,7 +135,7 @@ $(document).ready(function() {
         setUpEventListeners();
         initializeDropdowns();
         setMap();
-        setTimeSeries();
+        setTimeSeriesOne('National Average', 'upt_total', 'total_expenses');
 
         function initializeDropdowns() {
             populateMapDropdown();
@@ -187,7 +191,7 @@ $(document).ready(function() {
 
     /**
      * React to start of change in zoom level, set state boolean
-     * variable indicating whether the zoom started above or below 
+     * variable indicating whether the zoom started above or below
      * the zoom threshold
      */
     function onZoomStart() {
@@ -213,7 +217,7 @@ $(document).ready(function() {
         }
     }
 
-    /** 
+    /**
      * Remove objects with an NA value for a particular key
      * @param  {GeoJSON}
      * @param  {String}
@@ -240,7 +244,7 @@ $(document).ready(function() {
     /*
     Note: I think that these polygons and the graduated symbols are
     both not filled with color because of some css that I included
-    to style the time series chart 
+    to style the time series chart
      */
 
     /**
@@ -301,25 +305,20 @@ $(document).ready(function() {
     /**
      * Set time series plot based on selectize input
      */
-    function setTimeSeries() {
-        // TODO: more succinct way to do this?
-        var msaField = msaValToName(msaToggle.items[0]);
-        // For the time being I will use the TCVIS.Config.ntdField var
-        // since the census data are not in the time series dataset yet
-        // TODO: connect this to the map var toggle 
-        if (msaField !== undefined && TCVIZ.State.ntdField !== null) {
-            TCVIZ.Connections.timeSeriesSql
-                .getJson(TCVIZ.State.ntdField, msaField)
-                .done(function(data) {
-                    // TODO: Remove chart elements before adding more
-                    TCVIZ.State.timeseries.clear();
-                    TCVIZ.State.timeseries.plot(data, TCVIZ.State.ntdField);
-                });
-        }
+    function setTimeSeriesOne(msaName, yLeftVariable, yRightVariable) {
+        if (!msaName) { return; }
+
+        TCVIZ.Connections.chartSql.getTransitData(msaName, yLeftVariable, yRightVariable)
+            .done(function (data) {
+                var chartData = TCVIZ.Connections.chartSql
+                    .transformTransitData(data, yLeftVariable, yRightVariable);
+                console.log(chartData);
+                TCVIZ.State.chartOne.update(nationalYears, chartData[0], chartData[1]);
+            });
     }
 
     /**
-     * Set the default/stored map variable value for the current 
+     * Set the default/stored map variable value for the current
      * zoom level
      */
     function setMapDropdownValue() {

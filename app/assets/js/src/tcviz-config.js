@@ -1,4 +1,9 @@
 TCVIZ.Config = {
+    SQL: {
+        user: 'ridership',
+        format: 'geojson',
+        api_key: '73537cf8a5e88a4f170a0eda73deab782accaee2'
+    },
     zoomThreshold: 7,
     defaultNtdField: 'upt_total',
     defaultCensusField: 'pp_dns_',
@@ -246,8 +251,7 @@ TCVIZ.Config = {
         value: 56
     }],
     /*
-    
+
      */
     symbol_sizes: [5, 10, 15, 20, 25]
-
 };

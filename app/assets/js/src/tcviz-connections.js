@@ -1,5 +1,5 @@
 TCVIZ.Connections = {
+    chartSql: null,
     msaMap: null,
-    timeSeriesSql: null,
     tractMap: null,
 };

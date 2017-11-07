@@ -17,6 +17,7 @@ $(document).ready(function() {
     var layerToggle = null;
     var msaToggle = null;
     var featureGroup = {};
+    var nationWide = isNationWide();
 
     /*
      Initialize objects
@@ -198,8 +199,9 @@ $(document).ready(function() {
      * passed
      */
     function onZoomEnd() {
-        if (TCVIZ.State.startNationWide !== isNationWide()) {
-            if (isNationWide()) {
+        nationWide = isNationWide();
+        if (TCVIZ.State.startNationWide !== nationWide) {
+            if (nationWide) {
                 changeToggle(layerToggle, TCVIZ.Config.nationwide_layers);
                 setMapDropdownValue();
                 TCVIZ.State.ntdField = layerToggle.items[0];
@@ -321,13 +323,13 @@ $(document).ready(function() {
      * zoom level
      */
     function setMapDropdownValue() {
-        if (isNationWide()) {
+        nationWide = isNationWide();
+        if (nationWide) {
             if (TCVIZ.State.ntdField !== undefined) {
                 layerToggle.setValue(TCVIZ.State.ntdField);
             } else {
                 layerToggle.setValue(TCVIZ.Config.defaultNtdField);
             }
-
         } else {
             if (TCVIZ.State.censusField !== undefined) {
                 layerToggle.setValue(TCVIZ.State.censusField);

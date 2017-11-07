@@ -2,7 +2,7 @@ TCVIZ.Config = {
     zoomThreshold: 7,
     defaultNtdField: 'upt_total',
     defaultCensusField: 'pp_dns_',
-    defaultMSA: 33,
+    defaultMSA: 56,
     nationwide_layers: [{
         text: 'Total Ridership',
         value: 'upt_total',
@@ -241,9 +241,13 @@ TCVIZ.Config = {
     }, {
         text: 'Washington-Arlington-Alexandria, DC-VA-MD-WV',
         value: 55
+    }, {
+        text: 'National Average',
+        value: 56
     }],
     /*
     
      */
     symbol_sizes: [5, 10, 15, 20, 25]
+
 };

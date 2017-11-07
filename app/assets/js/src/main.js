@@ -102,13 +102,13 @@ $(document).ready(function() {
      * @param  {array}  limits   An array of quintile breaks for this variable
      * @return {object}          An object with style parameters
      */
-    function styleCircles(feature, variable, limits) {
-        return {
-            radius: TCVIZ.Config.symbol_sizes[getBucket(feature, variable, limits)],
-            fillOpacity: 0.5,
-            color: '#0000FF'
-        };
-    }
+    // function styleCircles(feature, variable, limits) {
+    //     return {
+    //         radius: TCVIZ.Config.symbol_sizes[getBucket(feature, variable, limits)],
+    //         fillOpacity: 0.5,
+    //         color: '#0000FF'
+    //     };
+    // }
 
     /**
      * Determine whether the app is zoomed out beyond nationwide
@@ -257,7 +257,7 @@ $(document).ready(function() {
                 .done(function(data) {
                     data = removeNAs(data, valueField);
                     featureGroup = L.geoJson(data, {
-                        // TODO
+                        // TODO style geojson layer
                         color: '#000FFF',
                         stroke: false,
                         weight: 1,

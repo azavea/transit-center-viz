@@ -10,37 +10,37 @@ TCVIZ.Carto.SQL = function(element) {
 
     switch (this.element) {
 
-        case 'timeSeries':
-            this.queryElements = {
-                table: 'msa_yearly_transit_vars',
-                vars: ['name_msa', 'the_geom', 'year', 'upt_total']
-            };
-            break;
+    case 'timeSeries':
+        this.queryElements = {
+            table: 'msa_yearly_transit_vars',
+            vars: ['name_msa', 'the_geom', 'year', 'upt_total']
+        };
+        break;
 
-        case 'msaMap':
-            this.queryElements = {
-                table: 'msa_change_transit_vars',
-                vars: ['the_geom', 'name']
-            };
-            break;
+    case 'msaMap':
+        this.queryElements = {
+            table: 'msa_change_transit_vars',
+            vars: ['the_geom', 'name']
+        };
+        break;
 
-            // this table is not on Carto yet
-        case 'censusTracts':
-            this.queryElements = {
-                table: 'tract_demographic_vars',
-                vars: ['the_geom', 'geoid_t', 'name_msa']
-            };
-            break;
+        // this table is not on Carto yet
+    case 'censusTracts':
+        this.queryElements = {
+            table: 'tract_demographic_vars',
+            vars: ['the_geom', 'geoid_t', 'name_msa']
+        };
+        break;
 
-        case 'states':
-            this.queryElements = {
-                table: 'states_with_gas_prices',
-                vars: ['the_geom', 'name']
-            };
-            break;
+    case 'states':
+        this.queryElements = {
+            table: 'states_with_gas_prices',
+            vars: ['the_geom', 'name']
+        };
+        break;
 
-        default:
-            this.queryElements = null;
+    default:
+        this.queryElements = null;
     }
 
     // methods
@@ -64,7 +64,7 @@ TCVIZ.Carto.SQL = function(element) {
 
     this.getJson = function(valueField, msa) {
         var sql = this.getSql(valueField, msa);
-        console.log(this.element + ": " + sql);
+        // console.log(this.element + ": " + sql);
         return this.geojsonClient.execute(sql);
     };
 };

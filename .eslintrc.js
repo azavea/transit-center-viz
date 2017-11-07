@@ -7,7 +7,8 @@ module.exports = {
         _: false,
         cartodb: false,
         d3: false,
-        TCVIZ: true
+        TCVIZ: true,
+        chroma: false
     },
     "extends": "eslint:recommended",
     "rules": {

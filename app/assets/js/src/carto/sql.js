@@ -9,22 +9,17 @@ TCVIZ.Carto.SQL = function(element) {
     });
 
     switch (this.element) {
-    /*
-         * for this chart, we may want to adjust query to bring in
-         * all ntd vars for a given MSA, since the dataset is small
-         * that way we would only need to execute another sql query
-         * when the user updated the MSA
-         */
+
     case 'timeSeries':
         this.queryElements = {
             table: 'msa_yearly_transit_vars',
-            vars: ['name', 'the_geom', 'year', 'upt_total']
+            vars: ['name_msa', 'the_geom', 'year', 'upt_total']
         };
         break;
 
     case 'msaMap':
         this.queryElements = {
-            table: 'msa_change_transit_vars_revised',
+            table: 'msa_change_transit_vars',
             vars: ['the_geom', 'name']
         };
         break;
@@ -33,7 +28,7 @@ TCVIZ.Carto.SQL = function(element) {
     case 'censusTracts':
         this.queryElements = {
             table: 'tract_demographic_vars',
-            vars: ['the_geom', 'geoid']
+            vars: ['the_geom', 'geoid_t', 'name_msa']
         };
         break;
 
@@ -50,12 +45,18 @@ TCVIZ.Carto.SQL = function(element) {
 
     // methods
     this.getSql = function(valueField, msa) {
-        var fields = this.queryElements.vars.concat(valueField);
+
+        var fields;
+        if (!this.queryElements.vars.includes(valueField)) {
+            fields = this.queryElements.vars.concat(valueField);
+        } else {
+            fields = this.queryElements.vars;
+        }
 
         var sql = 'SELECT ' + fields.join() + ' FROM ' + this.queryElements.table;
 
         if (msa !== undefined) {
-            return sql + ' WHERE name=\'' + msa + '\'';
+            return sql + ' WHERE name_msa=\'' + msa + '\'';
         } else {
             return sql;
         }

@@ -14,6 +14,9 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 }).addTo(map);
 
 $(document).ready(function() {
+    var layerToggle = null;
+    var msaToggle = null;
+    var featureGroup = {};
 
     /*
      Initialize objects
@@ -38,8 +41,12 @@ $(document).ready(function() {
         setMap();
         setTimeSeries();
     });
-    $('#MSA_toggle')[0].selectize.on('change', setTimeSeries);
-    map.on('zoomstart', onZoomChange);
+    $('#MSA_toggle')[0].selectize.on('change', function() {
+        setTimeSeries();
+        setMap();
+    });
+    map.on('zoomstart', onZoomStart);
+    map.on('zoomend', onZoomEnd);
 
     /*
     Functions--------------------------------------------------------------
@@ -56,6 +63,52 @@ $(document).ready(function() {
         select.addOption(layer_options);
     }
 
+    /**
+     * Get breaks of a variable
+     * @param  {GeoJSON} featureGroup Returned from SQL query
+     * @param  {string}  variable     Variable being mapped
+     * @return {array}                An array of quintile breaks for this variable              
+     */
+    function getQuintiles(featureGroup, variable) {
+        var varArray = _.map(featureGroup.features,
+            function(x) {
+                return x.properties[variable];
+            });
+        var theLimits = chroma.limits(varArray, 'q', 5);
+        return theLimits;
+    }
+
+    /**
+     * Find which quintile bucket a value falls into
+     * @param  {object} feature  One object in featuregroug
+     * @param  {string} variable Variable being mapped
+     * @param  {array}  limits   Array of quintile breaks in cont. var
+     * @return {integer}         Integer 0-4 bucket that the value falls into
+     */
+    function getBucket(feature, variable, limits) {
+        var v = feature.properties[variable];
+        for (var i = limits.length; i > 0; i--) {
+            if (v <= limits[i] && v > limits[i - 1]) {
+                return i - 1;
+            }
+        }
+    }
+
+    /**
+     * Style graduated symbols based on selected variables
+     * TODO: currently this is not implemented, was not working
+     * @param  {objext} feature  An individual msa
+     * @param  {string} variable The variable being mapped
+     * @param  {array}  limits   An array of quintile breaks for this variable
+     * @return {object}          An object with style parameters
+     */
+    function styleCircles(feature, variable, limits) {
+        return {
+            radius: TCVIZ.Config.symbol_sizes[getBucket(feature, variable, limits)],
+            fillOpacity: 0.5,
+            color: '#0000FF'
+        };
+    }
 
     /**
      * Determine whether the app is zoomed out beyond nationwide
@@ -87,17 +140,16 @@ $(document).ready(function() {
         }
 
         function populateMapDropdown() {
-            $('#toggle')[0].selectize
-                .addOption(TCVIZ.Config.nationwide_layers);
+            layerToggle.addOption(TCVIZ.Config.nationwide_layers);
         }
 
         function populateMSADropdown() {
-            $('#MSA_toggle')[0].selectize.addOption(TCVIZ.Config.MSA_list);
+            msaToggle.addOption(TCVIZ.Config.MSA_list);
         }
 
         function setDefaultMSADropdownValue() {
-            // TODO: what will the default value for MSA dropdown be?
-            $('#MSA_toggle')[0].selectize.setValue(TCVIZ.Config.defaultMSA);
+            // TODO: default to national average
+            msaToggle.setValue(TCVIZ.Config.defaultMSA);
         }
 
         function setUpEventListeners() {
@@ -110,6 +162,9 @@ $(document).ready(function() {
                 create: true,
                 sortField: 'text'
             });
+            // Init these vars here after the selectize object is created
+            layerToggle = $('#toggle')[0].selectize;
+            msaToggle = $('#MSA_toggle')[0].selectize;
         }
 
         function setUpSidebarToggle() {
@@ -121,50 +176,39 @@ $(document).ready(function() {
     }
 
     /**
-     * Get the layer toggle object
-     * @return {Selector}
-     */
-    function layerToggle() {
-        return $('#toggle')[0].selectize;
-    }
-
-    /**
-     * Get the string associated with selected variable
-     * @return {String}
-     */
-    function layerToggleValue() {
-        return layerToggle().items[0];
-    }
-
-    /**
-     * 
+     * Get MSA text
      * @param  {[type]}
      * @return {[type]}
      */
     function msaValToName(msaVal) {
-        return $('#MSA_toggle')[0].selectize.options[msaVal].text;
+        return msaToggle.options[msaVal].text;
     }
 
     /**
-     * React to change in zoom level, changing map if user crosses threshold
-     * @return {[type]}
+     * React to start of change in zoom level, set state boolean
+     * variable indicating whether the zoom started above or below 
+     * the zoom threshold
      */
-    function onZoomChange() {
-        var startNationWide = isNationWide();
-        // move this ^ out to it's own
-        map.on('zoomend', function() {
-            if (startNationWide !== isNationWide()) {
-                if (isNationWide()) {
-                    changeToggle(layerToggle(), TCVIZ.Config.nationwide_layers);
-                    setMapDropdownValue();
-                    TCVIZ.State.ntdField = layerToggleValue();
-                } else {
-                    changeToggle(layerToggle(), TCVIZ.Config.MSA_layers);
-                    setMapDropdownValue();
-                    TCVIZ.State.censusField = layerToggleValue();
-                }
+    function onZoomStart() {
+        TCVIZ.State.startNationWide = isNationWide();
+    }
+
+    /**
+     * React to end zoom level, changing the map content if threshold was
+     * passed
+     */
+    function onZoomEnd() {
+        if (TCVIZ.State.startNationWide !== isNationWide()) {
+            if (isNationWide()) {
+                changeToggle(layerToggle, TCVIZ.Config.nationwide_layers);
+                setMapDropdownValue();
+                TCVIZ.State.ntdField = layerToggle.items[0];
+            } else {
+                changeToggle(layerToggle, TCVIZ.Config.MSA_layers);
+                setMapDropdownValue();
+                TCVIZ.State.censusField = layerToggle.items[0];
             }
-        });
+        }
     }
 
     /** 
@@ -191,20 +235,36 @@ $(document).ready(function() {
         }
     }
 
+    /*
+    Note: I think that these polygons and the graduated symbols are
+    both not filled with color because of some css that I included
+    to style the time series chart 
+     */
+
     /**
      * Set polygon layer of MSAs
      */
     function setMSAGeoJSONLayer() {
-        var valueField = layerToggleValue();
+        var valueField = layerToggle.items[0];
+        var msa = msaToggle.items[0];
+        msa = msaValToName(msa);
         if (valueField !== undefined) {
-            if (map.hasLayer(TCVIZ.State.featureGroup)) {
-                map.removeLayer(TCVIZ.State.featureGroup);
+            if (map.hasLayer(featureGroup)) {
+                map.removeLayer(featureGroup);
             }
             TCVIZ.State.censusField = valueField;
-            // TCVIZ.Connections.tractMap.getJson()
-            //     .done(function(data) {
-            // // TODO: add the rest of this function once census data are up
-            //     });
+            TCVIZ.Connections.tractMap.getJson(valueField, msa)
+                .done(function(data) {
+                    data = removeNAs(data, valueField);
+                    featureGroup = L.geoJson(data, {
+                        // TODO
+                        color: '#000FFF',
+                        stroke: false,
+                        weight: 1,
+                        fillOpacity: 0.75
+                    });
+                    map.addLayer(featureGroup);
+                });
         }
     }
 
@@ -212,35 +272,36 @@ $(document).ready(function() {
      * Set a nationwide point layer
      */
     function setNationalGeoJSONLayer() {
-        var valueField = $('#toggle')[0].selectize.items[0];
+        var valueField = layerToggle.items[0];
         if (valueField !== undefined) {
-            if (map.hasLayer(TCVIZ.State.featureGroup)) {
-                map.removeLayer(TCVIZ.State.featureGroup);
+            if (map.hasLayer(featureGroup)) {
+                map.removeLayer(featureGroup);
             }
             TCVIZ.State.ntdField = valueField;
             TCVIZ.Connections.msaMap.getJson(valueField)
                 .done(function(data) {
                     data = removeNAs(data, valueField);
-                    TCVIZ.State.featureGroup = L.geoJson(data, {
+                    var limits = getQuintiles(data, valueField);
+                    featureGroup = L.geoJson(data, {
                         pointToLayer: function(feature, latlng) {
                             return new L.CircleMarker(latlng, {
-                                // * TODO: function to scale values
-                                // * TODO: timeseries stylesheet interferes with
-                                // *  graduated symbols, fix this
-                                radius: feature.properties[valueField] / 1000000,
+                                radius: TCVIZ.Config.symbol_sizes[getBucket(feature, valueField, limits)],
                                 fillOpacity: 0.5,
                                 color: '#0000FF'
                             });
                         }
                     });
-                    map.addLayer(TCVIZ.State.featureGroup);
+                    map.addLayer(featureGroup);
                 });
         }
     }
 
+    /**
+     * Set time series plot based on selectize input
+     */
     function setTimeSeries() {
         // TODO: more succinct way to do this?
-        var msaField = msaValToName($('#MSA_toggle')[0].selectize.items[0]);
+        var msaField = msaValToName(msaToggle.items[0]);
         // For the time being I will use the TCVIS.Config.ntdField var
         // since the census data are not in the time series dataset yet
         // TODO: connect this to the map var toggle 
@@ -262,18 +323,17 @@ $(document).ready(function() {
     function setMapDropdownValue() {
         if (isNationWide()) {
             if (TCVIZ.State.ntdField !== undefined) {
-                $('#toggle')[0].selectize.setValue(TCVIZ.State.ntdField);
+                layerToggle.setValue(TCVIZ.State.ntdField);
             } else {
-                $('#toggle')[0].selectize.setValue(TCVIZ.Config.defaultNtdField);
+                layerToggle.setValue(TCVIZ.Config.defaultNtdField);
             }
 
         } else {
             if (TCVIZ.State.censusField !== undefined) {
-                $('#toggle')[0].selectize.setValue(TCVIZ.State.censusField);
+                layerToggle.setValue(TCVIZ.State.censusField);
             } else {
-                $('#toggle')[0].selectize.setValue(TCVIZ.Config.defaultCensusField);
+                layerToggle.setValue(TCVIZ.Config.defaultCensusField);
             }
         }
     }
-
 });

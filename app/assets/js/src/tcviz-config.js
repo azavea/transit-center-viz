@@ -1,5 +1,5 @@
 TCVIZ.Config = {
-    zoomThreshold: 9,
+    zoomThreshold: 7,
     defaultNtdField: 'upt_total',
     defaultCensusField: 'popDensity',
     defaultMSA: 33,
@@ -233,5 +233,6 @@ TCVIZ.Config = {
     }, {
         text: 'Washington-Arlington-Alexandria, DC-VA-MD-WV',
         value: 55
-    }]
+    }],
+    symbol_sizes: [5, 10, 15, 20, 25]
 };

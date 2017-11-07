@@ -1,7 +1,7 @@
 TCVIZ.Config = {
     zoomThreshold: 7,
     defaultNtdField: 'upt_total',
-    defaultCensusField: 'popDensity',
+    defaultCensusField: 'pp_dns_',
     defaultMSA: 33,
     nationwide_layers: [{
         text: 'Total Ridership',
@@ -33,40 +33,48 @@ TCVIZ.Config = {
     }],
     MSA_layers: [{
         text: 'Percent Commute by Driving',
-        value: 'driving'
+        value: 'drove_c'
     }, {
         text: 'Percent Commute by Public Transit',
-        value: 'transit'
+        value: 'trnst_c'
+    }, {
+        text: 'Percent Commute by Carpool',
+        value: 'carpl_c'
     }, {
         text: 'Total Employment',
-        value: 'employment'
+        value: 'emp_c'
     }, {
         text: 'Households with No Vehicle',
-        value: 'vehicle'
+        value: 'veh_c'
     }, {
         text: 'Median Household Income',
-        value: 'medianHH'
+        value: 'inc_c'
     }, {
+        // TODO @eneedham is this the correct text:value comb?
         text: 'Households Below 200% of Poverty Line',
-        value: 'poverty'
+        value: 'ppov_c'
+    }, {
+        // TODO @eneedham if so, what is this value?
+        text: '[value for this variable]',
+        value: 'fpov_c'
     }, {
         text: 'Population Density',
-        value: 'popDensity'
+        value: 'pp_dns_'
     }, {
         text: 'Total Population Foregin Born',
-        value: 'foreignBorn'
+        value: 'forgn_c'
     }, {
         text: 'Percent Black',
-        value: 'pctBlack'
+        value: 'black_c'
     }, {
         text: 'Percent Asian',
-        value: 'pctAsian'
+        value: 'asian_c'
     }, {
         text: 'Percent White',
-        value: 'pctWhite'
+        value: 'white_c'
     }, {
         text: 'Percent Hispanic/Latino of any race',
-        value: 'pctHisp'
+        value: 'hisp_c'
     }],
     MSA_list: [{
         text: 'Atlanta-Sandy Springs-Roswell, GA',
@@ -234,5 +242,8 @@ TCVIZ.Config = {
         text: 'Washington-Arlington-Alexandria, DC-VA-MD-WV',
         value: 55
     }],
+    /*
+    
+     */
     symbol_sizes: [5, 10, 15, 20, 25]
 };

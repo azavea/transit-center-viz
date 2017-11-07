@@ -28,7 +28,7 @@ TCVIZ.Carto.SQL = function(element) {
         case 'censusTracts':
             this.queryElements = {
                 table: 'tract_demographic_vars',
-                vars: ['the_geom', 'geoid', 'name_msa']
+                vars: ['the_geom', 'geoid_t', 'name_msa']
             };
             break;
 
@@ -64,7 +64,7 @@ TCVIZ.Carto.SQL = function(element) {
 
     this.getJson = function(valueField, msa) {
         var sql = this.getSql(valueField, msa);
-        // console.log(this.element + ": " + sql);
+        console.log(this.element + ": " + sql);
         return this.geojsonClient.execute(sql);
     };
 };

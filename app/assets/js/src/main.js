@@ -83,7 +83,7 @@ $(document).ready(function() {
         });
     });
 
-    $('body').on('click', '#tract-popup-zoom', function(e) {
+    $('body').on('click', '#tract-popup-zoom', function() {
         msaToggle.setValue(TCVIZ.Config.defaultMSA);
         map.setZoom(TCVIZ.Config.zoomThreshold);
     });

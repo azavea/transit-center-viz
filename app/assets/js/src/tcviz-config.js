@@ -11,7 +11,7 @@ TCVIZ.Config = {
     zoomThreshold: 7,
     defaultNtdField: 'upt_total',
     defaultCensusField: 'pp_dns_',
-    defaultMSA: 56,
+    defaultMSA: 'NNNNN',
     ridershipChartLeftAxisDefault: 'upt_total',
     ridershipChartRightAxisDefault: 'avg_fare',
     nationwide_layers: [{

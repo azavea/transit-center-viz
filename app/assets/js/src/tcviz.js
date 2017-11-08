@@ -3,5 +3,6 @@ TCVIZ = {
     Charts: {},
     Config: {},
     State: {},
-    Connections: {}
+    Connections: {},
+    Templates: {}
 };

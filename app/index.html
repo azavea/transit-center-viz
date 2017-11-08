@@ -27,8 +27,8 @@
   <body>
 
   <!-- Navbar -->
-  <div class="main-nav">
-    <div class="nav-section primary">
+      <div class="main-nav">
+        <div class="nav-section primary">
       <h1 class="logo">
       <span>TransitCenter</span>
       </h1>
@@ -160,6 +160,33 @@
   </div>
   <!-- Modal -->
 
+
+  <!-- templates -->
+  <script id="msa-popup-tmpl" type="text/template">
+    <div id="msa-popup">
+        <h4><%= name %></h4>
+        <div>
+            <label>2015 Annual Ridership</label>
+            <div><%= upt_total_2015.toLocaleString() %></div>
+        </div>
+        <div>
+            <label>Change in ridership (2006-2015)</label>
+            <div><%= (upt_total * 100).toFixed(2) + "%" %></div>
+        </div>
+        <div>
+            <label>2015 <%= selectedLayerDisplay %></label>
+            <div><%= selectedLayerValue2015 %></div>
+        </div>
+        <div>
+            <label>Change in <%= selectedLayerDisplay %> (2006-2015)</label>
+            <div><%= (selectedLayerValue * 100).toFixed(2) + "%" %></div>
+        </div>
+
+        <a href="#" id="msa-popup-zoom" data-name="<%= name %>" >
+            See MSA Census Details
+        </a>
+    </div>
+  </script>
 
   <!-- scripts -->
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"

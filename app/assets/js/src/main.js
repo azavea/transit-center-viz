@@ -32,6 +32,10 @@ $(document).ready(function() {
     var ridershipChart = new TCVIZ.Charts.Ridership('time-series-1', {});
     var changeChart = new TCVIZ.Charts.Change('time-series-2', {});
 
+    TCVIZ.Templates = {
+        msaPopup: _.template($('#msa-popup-tmpl').html()),
+    };
+
     /*
     Initialize
      */

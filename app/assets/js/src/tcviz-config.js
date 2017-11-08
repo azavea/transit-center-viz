@@ -1,4 +1,8 @@
 TCVIZ.Config = {
+    map: {
+        center: [39.500, -98.35],
+        zoom: 4
+    },
     SQL: {
         user: 'ridership',
         format: 'geojson',

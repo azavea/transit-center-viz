@@ -54,4 +54,9 @@ TCVIZ.Carto.SQL = function(element) {
         var sql = this.getSql(valueField, msa);
         return this.geojsonClient.execute(sql);
     };
+
+    this.getBBoxForMSA = function(msaName) {
+        var sql = 'SELECT the_geom, name_msa FROM tract_demographic_vars WHERE name_msa = \'{{msaName}}\'';
+        return this.geojsonClient.getBounds(sql, {msaName: msaName}, {format: 'json'});
+    };
 };

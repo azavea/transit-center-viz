@@ -2,8 +2,8 @@
 
 // TODO: should these be in a config file?
 var map = L.map('map', {
-    center: [39.500, -98.35],
-    zoom: 4
+    center: TCVIZ.Config.map.center,
+    zoom: TCVIZ.Config.map.zoom
 });
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
@@ -48,6 +48,16 @@ $(document).ready(function() {
     $('#MSA_toggle')[0].selectize.on('change', function() {
         var msaName = msaValToName(msaToggle.items[0]);
         setTimeSeriesOne(msaName, 'upt_total', 'pop_dens');
+
+        // Auto zoom map to selected MSA, or zoom out if National Average selected
+        if (msaName === 'National Average') {
+            map.setView(TCVIZ.Config.map.center, TCVIZ.Config.map.zoom);
+        } else {
+            TCVIZ.Connections.msaMap.getBBoxForMSA(msaName).done(function(bbox) {
+                map.fitBounds(bbox);
+            });
+        }
+
         //setMap();
     });
     map.on('zoomstart', onZoomStart);
@@ -163,10 +173,12 @@ $(document).ready(function() {
         }
 
         function setUpSelectize() {
-            $('.selectize').selectize({
+            var defaults = {
                 create: true,
                 sortField: 'text'
-            });
+            };
+            $('#toggle').selectize(defaults);
+            $('#MSA_toggle').selectize(defaults);
             // Init these vars here after the selectize object is created
             layerToggle = $('#toggle')[0].selectize;
             msaToggle = $('#MSA_toggle')[0].selectize;
@@ -312,7 +324,6 @@ $(document).ready(function() {
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql
                     .transformTransitData(data, yLeftVariable, yRightVariable);
-                console.log(chartData);
                 TCVIZ.State.chartOne.update(nationalYears, chartData[0], chartData[1]);
             });
     }

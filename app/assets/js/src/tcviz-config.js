@@ -25,6 +25,9 @@ TCVIZ.Config = {
         text: 'Vehicle Revenue Miles',
         value: 'revenue_miles'
     }, {
+        text: 'Vehicle Revenue Hours',
+        value: 'revenue_hours'
+    }, {
         text: 'Expenses',
         value: 'total_expenses'
     }, {

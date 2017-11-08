@@ -8,7 +8,7 @@ TCVIZ.Carto.SQL = function(element) {
     case 'msaMap':
         this.queryElements = {
             table: 'msa_change_transit_vars',
-            vars: ['the_geom', 'name_ms']
+            vars: ['*']
         };
         break;
 

@@ -16,7 +16,7 @@ TCVIZ.Carto.SQL = function(element) {
     case 'censusTracts':
         this.queryElements = {
             table: 'tract_demographic_vars',
-            vars: ['the_geom', 'geoid_t', 'name_msa']
+            vars: ['the_geom', 'geoid_t', 'pp_dns_', 'name_msa', 'name_tr']
         };
         break;
 

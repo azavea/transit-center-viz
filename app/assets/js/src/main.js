@@ -34,6 +34,7 @@ $(document).ready(function() {
 
     TCVIZ.Templates = {
         msaPopup: _.template($('#msa-popup-tmpl').html()),
+        tractPopup: _.template($('#tract-popup-tmpl').html()),
     };
 
     /*
@@ -72,10 +73,19 @@ $(document).ready(function() {
     // Listen for button zoom clicks from MSA popups in order to zoom
     // to their extent.
     $('body').on('click', '#msa-popup-zoom', function(e) {
-        var msaName = $(e.target).data('name');
+        var msaName = $(e.target).data('name'),
+            msaOption = _.findWhere(TCVIZ.Config.MSA_list, { text: msaName });
+
+        // Set the msa dropdown to the currently selected msa
+        msaToggle.setValue(msaOption.value);
         TCVIZ.Connections.msaMap.getBBoxForMSA(msaName).done(function(bbox) {
             map.fitBounds(bbox);
         });
+    });
+
+    $('body').on('click', '#tract-popup-zoom', function(e) {
+        msaToggle.setValue(TCVIZ.Config.defaultMSA);
+        map.setZoom(TCVIZ.Config.zoomThreshold);
     });
 
     map.on('zoomstart', onZoomStart);
@@ -308,6 +318,22 @@ $(document).ready(function() {
                         fillOpacity: 0.75
                     });
                     map.addLayer(featureGroup);
+
+                    featureGroup.on('click', function(e) {
+                        // Construct a template context object with the current msa
+                        // plus the values for the selected msa variables and render
+                        // all in the popup template
+                        var currentLayer = _.findWhere(TCVIZ.Config.MSA_layers, { value: valueField }),
+                            msaValues = e.layer.feature.properties,
+                            ctx = _.assign(msaValues, {
+                                selectedLayerDisplay: currentLayer.text,
+                                selectedLayerValue: msaValues[currentLayer.value],
+                            });
+
+                        e.layer
+                            .bindPopup(TCVIZ.Templates.tractPopup(ctx))
+                            .openPopup();
+                    });
                 });
         }
     }

@@ -188,6 +188,27 @@
     </div>
   </script>
 
+  <script id="tract-popup-tmpl" type="text/template">
+    <div id="msa-tract-popup">
+        <h4><%= name_msa %></h4>
+        <div>
+            <label>Census Tract</label>
+            <div><%= name_tr %></div>
+        </div>
+        <div>
+            <label>Change in Population Density (2010-2015)</label>
+            <div><%= pp_dns_.toFixed(1) + "%" %></div>
+        </div>
+        <div>
+            <label>Change in <%= selectedLayerDisplay %> (2010-2015)</label>
+            <div><%= selectedLayerValue.toFixed(1) + "%" %></div>
+        </div>
+
+        <a href="#" id="tract-popup-zoom" data-name="<%= name %>" >
+            See MSA Transit Details
+        </a>
+    </div>
+  </script>
   <!-- scripts -->
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="

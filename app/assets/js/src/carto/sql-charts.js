@@ -63,9 +63,9 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
             'upt_bus': 'Bus Ridership'
         };
         var label = labels[metric] || metric;
-        if (label === metric) {
-            console.warn('No label for metric: ', metric, 'Add new label in sql-charts.js');
-        }
+        // if (label === metric) {
+        //     console.warn('No label for metric: ', metric, 'Add new label in sql-charts.js');
+        // }
         return label;
-    }
+    };
 };

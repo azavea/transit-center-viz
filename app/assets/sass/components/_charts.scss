@@ -1,10 +1,14 @@
 #timeSeries { font: 12px Arial;}
 
+/*
+Commented out because it was overriding Leaflet markers.
+Can this be made more specific if it is needed?
 path {
     stroke: steelblue;
     stroke-width: 2;
     fill: none;
 }
+*/
 
 .axis path,
 .axis line {

@@ -17,30 +17,39 @@ TCVIZ.Config = {
     nationwide_layers: [{
         text: 'Total Ridership',
         value: 'upt_total',
+        render: 'number',
     }, {
         text: 'Bus Ridership',
         value: 'upt_bus',
+        render: 'number',
     }, {
         text: 'Rail Ridership',
-        value: 'upt_rail'
+        value: 'upt_rail',
+        render: 'number',
     }, {
         text: 'Average Fare',
-        value: 'avg_fare'
+        value: 'avg_fare',
+        render: 'money',
     }, {
         text: 'Average Speed',
-        value: 'average_speed'
+        value: 'average_speed',
+        render: 'number',
     }, {
         text: 'Farebox Recovery',
-        value: 'farebox_recovery'
+        value: 'farebox_recovery',
+        render: 'money',
     }, {
         text: 'Vehicle Revenue Miles',
-        value: 'revenue_miles'
+        value: 'revenue_miles',
+        render: 'number',
     }, {
         text: 'Expenses',
-        value: 'total_expenses'
+        value: 'total_expenses',
+        render: 'money',
     }, {
         text: 'Statewide Gas Prices',
-        value: 'gas'
+        value: 'gas',
+        render: 'money',
     }],
     MSA_layers: [{
         text: 'Percent Commute by Driving',

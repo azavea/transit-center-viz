@@ -68,6 +68,16 @@ $(document).ready(function() {
         var yAxisRightVariable = value;
         setRidershipChart(msaName, TCVIZ.Config.ridershipChartLeftAxisDefault, yAxisRightVariable);
     });
+
+    // Listen for button zoom clicks from MSA popups in order to zoom
+    // to their extent.
+    $('body').on('click', '#msa-popup-zoom', function(e) {
+        var msaName = $(e.target).data('name');
+        TCVIZ.Connections.msaMap.getBBoxForMSA(msaName).done(function(bbox) {
+            map.fitBounds(bbox);
+        });
+    });
+
     map.on('zoomstart', onZoomStart);
     map.on('zoomend', onZoomEnd);
 
@@ -302,6 +312,22 @@ $(document).ready(function() {
         }
     }
 
+
+    function renderFormat(renderer, val) {
+        if (val === null) return "Not Available";
+
+        switch (renderer) {
+            case 'number':
+                return val.toLocaleString();
+                break;
+            case 'money':
+                return '$' + val.toLocaleString();
+                break;
+            default:
+                return val;
+        }
+    }
+
     /**
      * Set a nationwide point layer
      */
@@ -320,11 +346,29 @@ $(document).ready(function() {
                         pointToLayer: function(feature, latlng) {
                             return new L.CircleMarker(latlng, {
                                 radius: TCVIZ.Config.symbol_sizes[getBucket(feature, valueField, limits)],
-                                fillOpacity: 0.5,
+                                fillOpacity: 0.4,
                                 color: '#0000FF'
                             });
                         }
                     });
+
+                    featureGroup.on('click', function(e) {
+                        // Construct a template context object with the current msa
+                        // plus the values for the selected msa variables and render
+                        // all in the popup template
+                        var currentLayer = _.findWhere(TCVIZ.Config.nationwide_layers, { value: valueField }),
+                            msaValues = e.layer.feature.properties,
+                            ctx = _.assign(msaValues, {
+                                selectedLayerDisplay: currentLayer.text,
+                                selectedLayerValue: msaValues[currentLayer.value],
+                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[currentLayer.value + '_2015']),
+                            });
+
+                        e.layer
+                            .bindPopup(TCVIZ.Templates.msaPopup(ctx))
+                            .openPopup();
+                    });
+
                     map.addLayer(featureGroup);
                 });
         }

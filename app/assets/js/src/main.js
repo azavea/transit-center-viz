@@ -340,17 +340,15 @@ $(document).ready(function() {
 
 
     function renderFormat(renderer, val) {
-        if (val === null) return "Not Available";
+        if (val === null || val === undefined) { return 'Not Available'; }
 
         switch (renderer) {
-            case 'number':
-                return val.toLocaleString();
-                break;
-            case 'money':
-                return '$' + val.toLocaleString();
-                break;
-            default:
-                return val;
+        case 'number':
+            return val.toLocaleString();
+        case 'money':
+            return '$' + val.toLocaleString();
+        default:
+            return val;
         }
     }
 

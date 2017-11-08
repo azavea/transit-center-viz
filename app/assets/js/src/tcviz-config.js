@@ -12,6 +12,8 @@ TCVIZ.Config = {
     defaultNtdField: 'upt_total',
     defaultCensusField: 'pp_dns_',
     defaultMSA: 56,
+    ridershipChartLeftAxisDefault: 'upt_total',
+    ridershipChartRightAxisDefault: 'avg_fare',
     nationwide_layers: [{
         text: 'Total Ridership',
         value: 'upt_total',

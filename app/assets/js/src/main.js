@@ -16,6 +16,7 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 $(document).ready(function() {
     var layerToggle = null;
     var msaToggle = null;
+    var ridershipChartToggle = null;
     var featureGroup = {};
     var nationWide = isNationWide();
 
@@ -39,13 +40,12 @@ $(document).ready(function() {
     /*
     Listeners
      */
-    $('#toggle')[0].selectize.on('change', function() {
+    layerToggle.on('change', function() {
         setMap();
-        //setTimeSeries();
     });
-    $('#MSA_toggle')[0].selectize.on('change', function() {
-        var msaName = msaValToName(msaToggle.items[0]);
-        setRidershipChart(msaName, 'upt_total', 'pop_dens');
+    msaToggle.on('change', function() {
+        var msaName = msaValToName(msaToggle.getValue());
+        setRidershipChart(msaName, TCVIZ.Config.ridershipChartLeftAxisDefault, ridershipChartToggle.getValue());
         setChangeChart(msaName);
 
         // Auto zoom map to selected MSA, or zoom out if National Average selected
@@ -57,7 +57,12 @@ $(document).ready(function() {
             });
         }
 
-        //setMap();
+        // TODO: May need to readd setMap() call here
+    });
+    ridershipChartToggle.on('change', function(value) {
+        var msaName = msaValToName(msaToggle.getValue());
+        var yAxisRightVariable = value;
+        setRidershipChart(msaName, TCVIZ.Config.ridershipChartLeftAxisDefault, yAxisRightVariable);
     });
     map.on('zoomstart', onZoomStart);
     map.on('zoomend', onZoomEnd);
@@ -141,47 +146,54 @@ $(document).ready(function() {
         /**
          * All initialize functions
          */
+        setUpSelectize();
         setUpEventListeners();
-        initializeDropdowns();
+        setMapDropdownValue();
         setMap();
-        setRidershipChart('National Average', 'upt_total', 'total_expenses');
         setChangeChart('National Average');
-
-        function initializeDropdowns() {
-            populateMapDropdown();
-            populateMSADropdown();
-            setMapDropdownValue();
-            setDefaultMSADropdownValue();
-        }
-
-        function populateMapDropdown() {
-            layerToggle.addOption(TCVIZ.Config.nationwide_layers);
-        }
-
-        function populateMSADropdown() {
-            msaToggle.addOption(TCVIZ.Config.MSA_list);
-        }
-
-        function setDefaultMSADropdownValue() {
-            // TODO: default to national average
-            msaToggle.setValue(TCVIZ.Config.defaultMSA);
-        }
 
         function setUpEventListeners() {
             setUpSidebarToggle();
-            setUpSelectize();
         }
 
         function setUpSelectize() {
             var defaults = {
-                create: true,
-                sortField: 'text'
+                create: true
             };
-            $('#toggle').selectize(defaults);
-            $('#MSA_toggle').selectize(defaults);
-            // Init these vars here after the selectize object is created
+            // Layer select
+            $('#toggle').selectize(_.extend({}, defaults, {
+                options: TCVIZ.Config.nationwide_layers
+            }));
             layerToggle = $('#toggle')[0].selectize;
+
+            // MSA select
+            $('#MSA_toggle').selectize(_.extend({}, defaults, {
+                options: TCVIZ.Config.MSA_list
+            }));
             msaToggle = $('#MSA_toggle')[0].selectize;
+            msaToggle.setValue(TCVIZ.Config.defaultMSA);
+
+            // Ridership chart select
+            var nationwide = _.map(TCVIZ.Config.nationwide_layers, function(layer) {
+                return _.extend({}, layer, {group: 'nationwide'});
+            });
+            var msa = _.map(TCVIZ.Config.MSA_layers, function(layer) {
+                return _.extend({}, layer, {group: 'msa'});
+            });
+            $('#selectize-ridership-chart').selectize(_.extend({}, defaults, {
+                options: nationwide.concat(msa),
+                optgroupField: 'group',
+                optgroups: [
+                    {value: 'nationwide', label: 'Ridership'},
+                    {value: 'msa', label: 'Census'}
+                ]
+            }));
+            ridershipChartToggle = $('#selectize-ridership-chart')[0].selectize;
+            ridershipChartToggle.setValue(TCVIZ.Config.defaultRidershipValue);
+            setRidershipChart(
+                msaToggle.getValue(),
+                TCVIZ.Config.ridershipChartLeftAxisDefault,
+                ridershipChartToggle.getValue());
         }
 
         function setUpSidebarToggle() {

@@ -20,7 +20,7 @@ TCVIZ.Charts.TimeSeries = function(elementId, config) {
         borderColor: 'blue',
         fill: false,
         yAxisID: 'y-axis-right'
-    }
+    };
 
     this.setOptions = function(options) {
         if (!options) {

@@ -11,6 +11,8 @@ TCVIZ.Charts.Change = function(elementId, config) {
     this.update = function(datasets) {
         var self = this;
         _.each(datasets, function(data, index) {
+            // chart data received as values between 0-1, map to 0-100
+            data.data = _.map(data.data, function(d) { return d * 100; });
             _.extend(self.chart.data.datasets[index], data);
         });
         this.chart.update();

@@ -24,11 +24,11 @@ TCVIZ.Charts.Change = function(elementId, config) {
         fill: false
     };
     this.datasets = [_.extend({}, this.yLeftDefaults, {
-        borderColor: 'red'
+        borderColor: '#bd33f0'
     }), _.extend({}, this.yLeftDefaults, {
-        borderColor: 'blue'
+        borderColor: '#f0bd33'
     }), _.extend({}, this.yLeftDefaults, {
-        borderColor: 'green'
+        borderColor: '#65f033'
     })];
     this.setOptions(config);
 

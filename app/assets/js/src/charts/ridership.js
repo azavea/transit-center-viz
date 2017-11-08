@@ -41,12 +41,12 @@ TCVIZ.Charts.Ridership = function(elementId, config) {
     };
     this.labels = _.range(2006, 2016);
     this.yLeftDefaults = {
-        borderColor: 'red',
+        borderColor: '#3165f0',
         fill: false,
         yAxisID: 'y-axis-left'
     };
     this.yRightDefaults = {
-        borderColor: 'blue',
+        borderColor: '#f03365',
         fill: false,
         yAxisID: 'y-axis-right'
     };

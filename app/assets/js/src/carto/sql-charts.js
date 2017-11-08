@@ -4,17 +4,11 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
     this.table = table;
     this.years = _.range(2006, 2016);
 
-    this.getJson = function(valueField, msa) {
-        var sql = this.getSql(valueField, msa);
-        return this.geojsonClient.execute(sql);
-    };
-
     // Get data for any pair of transit variables
-    this.getTransitData = function(msaId, metricOne, metricTwo) {
-        var sql = 'SELECT year, {{metricOne}}, {{metricTwo}} FROM {{table}} WHERE name_msa = \'{{msaId}}\'';
+    this.getTransitData = function(msaId, metrics) {
+        var sql = 'SELECT year, {{metrics}} FROM {{table}} WHERE name_msa = \'{{msaId}}\'';
         var params = {
-            metricOne: metricOne,
-            metricTwo: metricTwo,
+            metrics: metrics.join(', '),
             msaId: msaId,
             table: this.table
         };
@@ -22,21 +16,30 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
     };
 
     // Map data from Carto SQL response to Chart.js "datasets"
-    this.transformTransitData = function (data, metricOne, metricTwo) {
+    // data is raw data response from sql.execute()
+    // metrics is array of metrics to use in chart, each one corresponding to a chart.js "dataset"
+    // validYears is optional and is an array of years to filter the input sql data by
+    this.transformTransitData = function (data, metrics, validYears) {
+        var self = this;
         var dataByYear = {};
-        _.each(data.rows, function (row) {
-            dataByYear[row.year] = {};
-            dataByYear[row.year][metricOne] = row[metricOne];
-            dataByYear[row.year][metricTwo] = row[metricTwo];
+        if (!validYears) {
+            validYears = this.years;
+        }
+        var rows = _.filter(data.rows, function (row) {
+            return validYears.indexOf(row.year) >= 0;
         });
-        var chartDatasets = [{
-            label: this.getLabelForMetric(metricOne),
-            data: mapDataByYear(dataByYear, this.years, metricOne)
-        }, {
-            label: this.getLabelForMetric(metricTwo),
-            data: mapDataByYear(dataByYear, this.years, metricTwo)
-        }];
-        return chartDatasets;
+        _.each(rows, function (row) {
+            dataByYear[row.year] = {};
+            _.each(metrics, function(metric) {
+                dataByYear[row.year][metric] = row[metric];
+            });
+        });
+        return _.map(metrics, function (metric) {
+            return {
+                label: self.getLabelForMetric(metric),
+                data: mapDataByYear(dataByYear, validYears, metric)
+            };
+        });
 
         function mapDataByYear(dataByYear, years, metric) {
             return _.map(years, function (year) {
@@ -55,7 +58,9 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
         var labels = {
             'pop_dens': 'Population Density',
             'total_expenses': 'Total Expenses',
-            'upt_total': 'Total Ridership'
+            'upt_total': 'Total Ridership',
+            'upt_rail': 'Rail Ridership',
+            'upt_bus': 'Bus Ridership'
         };
         var label = labels[metric] || metric;
         if (label === metric) {

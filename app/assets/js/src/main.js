@@ -18,8 +18,6 @@ $(document).ready(function() {
     var msaToggle = null;
     var featureGroup = {};
     var nationWide = isNationWide();
-    var nationalYears = _.range(2006, 2016);
-    var censusYears = _.range(2010, 2016);
 
     /*
      Initialize objects
@@ -29,9 +27,9 @@ $(document).ready(function() {
     TCVIZ.Connections.chartSql = new TCVIZ.Carto.ChartSQL('msa_yearly_transit_vars', TCVIZ.Config.SQL);
     TCVIZ.Connections.tractMap = new TCVIZ.Carto.SQL('censusTracts');
 
-    // Time Series plot
-    TCVIZ.State.chartOne = new TCVIZ.Charts.TimeSeries('time-series-1', {});
-    TCVIZ.State.chartTwo = new TCVIZ.Charts.TimeSeries('time-series-2', {});
+    // Init charts
+    var ridershipChart = new TCVIZ.Charts.Ridership('time-series-1', {});
+    var changeChart = new TCVIZ.Charts.Change('time-series-2', {});
 
     /*
     Initialize
@@ -47,7 +45,8 @@ $(document).ready(function() {
     });
     $('#MSA_toggle')[0].selectize.on('change', function() {
         var msaName = msaValToName(msaToggle.items[0]);
-        setTimeSeriesOne(msaName, 'upt_total', 'pop_dens');
+        setRidershipChart(msaName, 'upt_total', 'pop_dens');
+        setChangeChart(msaName);
 
         // Auto zoom map to selected MSA, or zoom out if National Average selected
         if (msaName === 'National Average') {
@@ -145,7 +144,8 @@ $(document).ready(function() {
         setUpEventListeners();
         initializeDropdowns();
         setMap();
-        setTimeSeriesOne('National Average', 'upt_total', 'total_expenses');
+        setRidershipChart('National Average', 'upt_total', 'total_expenses');
+        setChangeChart('National Average');
 
         function initializeDropdowns() {
             populateMapDropdown();
@@ -317,14 +317,27 @@ $(document).ready(function() {
     /**
      * Set time series plot based on selectize input
      */
-    function setTimeSeriesOne(msaName, yLeftVariable, yRightVariable) {
+    function setRidershipChart(msaName, yLeftVariable, yRightVariable) {
         if (!msaName) { return; }
 
-        TCVIZ.Connections.chartSql.getTransitData(msaName, yLeftVariable, yRightVariable)
+        TCVIZ.Connections.chartSql.getTransitData(msaName, [yLeftVariable, yRightVariable])
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql
-                    .transformTransitData(data, yLeftVariable, yRightVariable);
-                TCVIZ.State.chartOne.update(nationalYears, chartData[0], chartData[1]);
+                    .transformTransitData(data, [yLeftVariable, yRightVariable]);
+                ridershipChart.update(chartData[0], chartData[1]);
+            });
+    }
+
+    function setChangeChart(msaName) {
+        if (!msaName) { return; }
+
+        var metrics = ['pop_dens', 'upt_rail', 'upt_bus'];
+        TCVIZ.Connections.chartSql.getTransitData(msaName, metrics)
+            .done(function (data) {
+                var chartData = TCVIZ.Connections.chartSql
+                    .transformTransitData(data, metrics, _.range(2010, 2016));
+
+                changeChart.update(chartData);
             });
     }
 

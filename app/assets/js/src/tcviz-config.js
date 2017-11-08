@@ -1,35 +1,55 @@
 TCVIZ.Config = {
+    map: {
+        center: [39.500, -98.35],
+        zoom: 4
+    },
+    SQL: {
+        user: 'ridership',
+        format: 'geojson',
+        api_key: '73537cf8a5e88a4f170a0eda73deab782accaee2'
+    },
     zoomThreshold: 7,
     defaultNtdField: 'upt_total',
     defaultCensusField: 'pp_dns_',
     defaultMSA: 56,
+    ridershipChartLeftAxisDefault: 'upt_total',
+    ridershipChartRightAxisDefault: 'avg_fare',
     nationwide_layers: [{
         text: 'Total Ridership',
         value: 'upt_total',
+        render: 'number',
     }, {
         text: 'Bus Ridership',
         value: 'upt_bus',
+        render: 'number',
     }, {
         text: 'Rail Ridership',
-        value: 'upt_rail'
+        value: 'upt_rail',
+        render: 'number',
     }, {
         text: 'Average Fare',
-        value: 'avg_fare'
+        value: 'avg_fare',
+        render: 'money',
     }, {
         text: 'Average Speed',
-        value: 'average_speed'
+        value: 'average_speed',
+        render: 'number',
     }, {
         text: 'Farebox Recovery',
-        value: 'farebox_recovery'
+        value: 'farebox_recovery',
+        render: 'money',
     }, {
         text: 'Vehicle Revenue Miles',
-        value: 'revenue_miles'
+        value: 'revenue_miles',
+        render: 'number',
     }, {
         text: 'Expenses',
-        value: 'total_expenses'
+        value: 'total_expenses',
+        render: 'money',
     }, {
         text: 'Statewide Gas Prices',
-        value: 'gas'
+        value: 'gas',
+        render: 'money',
     }],
     MSA_layers: [{
         text: 'Percent Commute by Driving',
@@ -246,8 +266,7 @@ TCVIZ.Config = {
         value: 56
     }],
     /*
-    
+
      */
     symbol_sizes: [5, 10, 15, 20, 25]
-
 };

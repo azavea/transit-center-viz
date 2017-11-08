@@ -2,8 +2,8 @@
 
 // TODO: should these be in a config file?
 var map = L.map('map', {
-    center: [39.500, -98.35],
-    zoom: 4
+    center: TCVIZ.Config.map.center,
+    zoom: TCVIZ.Config.map.zoom
 });
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
@@ -16,6 +16,7 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 $(document).ready(function() {
     var layerToggle = null;
     var msaToggle = null;
+    var ridershipChartToggle = null;
     var featureGroup = {};
     var nationWide = isNationWide();
 
@@ -24,11 +25,17 @@ $(document).ready(function() {
      */
     // Carto connections
     TCVIZ.Connections.msaMap = new TCVIZ.Carto.SQL('msaMap');
-    TCVIZ.Connections.timeSeriesSql = new TCVIZ.Carto.SQL('timeSeries');
+    TCVIZ.Connections.chartSql = new TCVIZ.Carto.ChartSQL('msa_yearly_transit_vars', TCVIZ.Config.SQL);
     TCVIZ.Connections.tractMap = new TCVIZ.Carto.SQL('censusTracts');
 
-    // Time Series plot
-    TCVIZ.State.timeseries = new TCVIZ.Charts.TimeSeries();
+    // Init charts
+    var ridershipChart = new TCVIZ.Charts.Ridership('time-series-1', {});
+    var changeChart = new TCVIZ.Charts.Change('time-series-2', {});
+
+    TCVIZ.Templates = {
+        msaPopup: _.template($('#msa-popup-tmpl').html()),
+        tractPopup: _.template($('#tract-popup-tmpl').html()),
+    };
 
     /*
     Initialize
@@ -38,14 +45,49 @@ $(document).ready(function() {
     /*
     Listeners
      */
-    $('#toggle')[0].selectize.on('change', function() {
-        setMap();
-        setTimeSeries();
-    });
-    $('#MSA_toggle')[0].selectize.on('change', function() {
-        setTimeSeries();
+    layerToggle.on('change', function() {
         setMap();
     });
+    msaToggle.on('change', function() {
+        var msaName = msaValToName(msaToggle.getValue());
+        setRidershipChart(msaName, TCVIZ.Config.ridershipChartLeftAxisDefault, ridershipChartToggle.getValue());
+        setChangeChart(msaName);
+
+        // Auto zoom map to selected MSA, or zoom out if National Average selected
+        if (msaName === 'National Average') {
+            map.setView(TCVIZ.Config.map.center, TCVIZ.Config.map.zoom);
+        } else {
+            TCVIZ.Connections.msaMap.getBBoxForMSA(msaName).done(function(bbox) {
+                map.fitBounds(bbox);
+            });
+        }
+
+        // TODO: May need to readd setMap() call here
+    });
+    ridershipChartToggle.on('change', function(value) {
+        var msaName = msaValToName(msaToggle.getValue());
+        var yAxisRightVariable = value;
+        setRidershipChart(msaName, TCVIZ.Config.ridershipChartLeftAxisDefault, yAxisRightVariable);
+    });
+
+    // Listen for button zoom clicks from MSA popups in order to zoom
+    // to their extent.
+    $('body').on('click', '#msa-popup-zoom', function(e) {
+        var msaName = $(e.target).data('name'),
+            msaOption = _.findWhere(TCVIZ.Config.MSA_list, { text: msaName });
+
+        // Set the msa dropdown to the currently selected msa
+        msaToggle.setValue(msaOption.value);
+        TCVIZ.Connections.msaMap.getBBoxForMSA(msaName).done(function(bbox) {
+            map.fitBounds(bbox);
+        });
+    });
+
+    $('body').on('click', '#tract-popup-zoom', function() {
+        msaToggle.setValue(TCVIZ.Config.defaultMSA);
+        map.setZoom(TCVIZ.Config.zoomThreshold);
+    });
+
     map.on('zoomstart', onZoomStart);
     map.on('zoomend', onZoomEnd);
 
@@ -68,7 +110,7 @@ $(document).ready(function() {
      * Get breaks of a variable
      * @param  {GeoJSON} featureGroup Returned from SQL query
      * @param  {string}  variable     Variable being mapped
-     * @return {array}                An array of quintile breaks for this variable              
+     * @return {array}                An array of quintile breaks for this variable
      */
     function getQuintiles(featureGroup, variable) {
         var varArray = _.map(featureGroup.features,
@@ -128,44 +170,54 @@ $(document).ready(function() {
         /**
          * All initialize functions
          */
+        setUpSelectize();
         setUpEventListeners();
-        initializeDropdowns();
+        setMapDropdownValue();
         setMap();
-        setTimeSeries();
-
-        function initializeDropdowns() {
-            populateMapDropdown();
-            populateMSADropdown();
-            setMapDropdownValue();
-            setDefaultMSADropdownValue();
-        }
-
-        function populateMapDropdown() {
-            layerToggle.addOption(TCVIZ.Config.nationwide_layers);
-        }
-
-        function populateMSADropdown() {
-            msaToggle.addOption(TCVIZ.Config.MSA_list);
-        }
-
-        function setDefaultMSADropdownValue() {
-            // TODO: default to national average
-            msaToggle.setValue(TCVIZ.Config.defaultMSA);
-        }
+        setChangeChart('National Average');
 
         function setUpEventListeners() {
             setUpSidebarToggle();
-            setUpSelectize();
         }
 
         function setUpSelectize() {
-            $('.selectize').selectize({
-                create: true,
-                sortField: 'text'
-            });
-            // Init these vars here after the selectize object is created
+            var defaults = {
+                create: true
+            };
+            // Layer select
+            $('#toggle').selectize(_.extend({}, defaults, {
+                options: TCVIZ.Config.nationwide_layers
+            }));
             layerToggle = $('#toggle')[0].selectize;
+
+            // MSA select
+            $('#MSA_toggle').selectize(_.extend({}, defaults, {
+                options: TCVIZ.Config.MSA_list
+            }));
             msaToggle = $('#MSA_toggle')[0].selectize;
+            msaToggle.setValue(TCVIZ.Config.defaultMSA);
+
+            // Ridership chart select
+            var nationwide = _.map(TCVIZ.Config.nationwide_layers, function(layer) {
+                return _.extend({}, layer, {group: 'nationwide'});
+            });
+            var msa = _.map(TCVIZ.Config.MSA_layers, function(layer) {
+                return _.extend({}, layer, {group: 'msa'});
+            });
+            $('#selectize-ridership-chart').selectize(_.extend({}, defaults, {
+                options: nationwide.concat(msa),
+                optgroupField: 'group',
+                optgroups: [
+                    {value: 'nationwide', label: 'Ridership'},
+                    {value: 'msa', label: 'Census'}
+                ]
+            }));
+            ridershipChartToggle = $('#selectize-ridership-chart')[0].selectize;
+            ridershipChartToggle.setValue(TCVIZ.Config.defaultRidershipValue);
+            setRidershipChart(
+                msaToggle.getValue(),
+                TCVIZ.Config.ridershipChartLeftAxisDefault,
+                ridershipChartToggle.getValue());
         }
 
         function setUpSidebarToggle() {
@@ -187,7 +239,7 @@ $(document).ready(function() {
 
     /**
      * React to start of change in zoom level, set state boolean
-     * variable indicating whether the zoom started above or below 
+     * variable indicating whether the zoom started above or below
      * the zoom threshold
      */
     function onZoomStart() {
@@ -213,7 +265,7 @@ $(document).ready(function() {
         }
     }
 
-    /** 
+    /**
      * Remove objects with an NA value for a particular key
      * @param  {GeoJSON}
      * @param  {String}
@@ -240,7 +292,7 @@ $(document).ready(function() {
     /*
     Note: I think that these polygons and the graduated symbols are
     both not filled with color because of some css that I included
-    to style the time series chart 
+    to style the time series chart
      */
 
     /**
@@ -266,7 +318,37 @@ $(document).ready(function() {
                         fillOpacity: 0.75
                     });
                     map.addLayer(featureGroup);
+
+                    featureGroup.on('click', function(e) {
+                        // Construct a template context object with the current msa
+                        // plus the values for the selected msa variables and render
+                        // all in the popup template
+                        var currentLayer = _.findWhere(TCVIZ.Config.MSA_layers, { value: valueField }),
+                            msaValues = e.layer.feature.properties,
+                            ctx = _.assign(msaValues, {
+                                selectedLayerDisplay: currentLayer.text,
+                                selectedLayerValue: msaValues[currentLayer.value],
+                            });
+
+                        e.layer
+                            .bindPopup(TCVIZ.Templates.tractPopup(ctx))
+                            .openPopup();
+                    });
                 });
+        }
+    }
+
+
+    function renderFormat(renderer, val) {
+        if (val === null || val === undefined) { return 'Not Available'; }
+
+        switch (renderer) {
+        case 'number':
+            return val.toLocaleString();
+        case 'money':
+            return '$' + val.toLocaleString();
+        default:
+            return val;
         }
     }
 
@@ -288,11 +370,29 @@ $(document).ready(function() {
                         pointToLayer: function(feature, latlng) {
                             return new L.CircleMarker(latlng, {
                                 radius: TCVIZ.Config.symbol_sizes[getBucket(feature, valueField, limits)],
-                                fillOpacity: 0.5,
+                                fillOpacity: 0.4,
                                 color: '#0000FF'
                             });
                         }
                     });
+
+                    featureGroup.on('click', function(e) {
+                        // Construct a template context object with the current msa
+                        // plus the values for the selected msa variables and render
+                        // all in the popup template
+                        var currentLayer = _.findWhere(TCVIZ.Config.nationwide_layers, { value: valueField }),
+                            msaValues = e.layer.feature.properties,
+                            ctx = _.assign(msaValues, {
+                                selectedLayerDisplay: currentLayer.text,
+                                selectedLayerValue: msaValues[currentLayer.value],
+                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[currentLayer.value + '_2015']),
+                            });
+
+                        e.layer
+                            .bindPopup(TCVIZ.Templates.msaPopup(ctx))
+                            .openPopup();
+                    });
+
                     map.addLayer(featureGroup);
                 });
         }
@@ -301,25 +401,32 @@ $(document).ready(function() {
     /**
      * Set time series plot based on selectize input
      */
-    function setTimeSeries() {
-        // TODO: more succinct way to do this?
-        var msaField = msaValToName(msaToggle.items[0]);
-        // For the time being I will use the TCVIS.Config.ntdField var
-        // since the census data are not in the time series dataset yet
-        // TODO: connect this to the map var toggle 
-        if (msaField !== undefined && TCVIZ.State.ntdField !== null) {
-            TCVIZ.Connections.timeSeriesSql
-                .getJson(TCVIZ.State.ntdField, msaField)
-                .done(function(data) {
-                    // TODO: Remove chart elements before adding more
-                    TCVIZ.State.timeseries.clear();
-                    TCVIZ.State.timeseries.plot(data, TCVIZ.State.ntdField);
-                });
-        }
+    function setRidershipChart(msaName, yLeftVariable, yRightVariable) {
+        if (!msaName) { return; }
+
+        TCVIZ.Connections.chartSql.getTransitData(msaName, [yLeftVariable, yRightVariable])
+            .done(function (data) {
+                var chartData = TCVIZ.Connections.chartSql
+                    .transformTransitData(data, [yLeftVariable, yRightVariable]);
+                ridershipChart.update(chartData[0], chartData[1]);
+            });
+    }
+
+    function setChangeChart(msaName) {
+        if (!msaName) { return; }
+
+        var metrics = ['pop_chg', 'upt_rail_chg', 'upt_bus_chg'];
+        TCVIZ.Connections.chartSql.getTransitData(msaName, metrics)
+            .done(function (data) {
+                var chartData = TCVIZ.Connections.chartSql
+                    .transformTransitData(data, metrics, _.range(2010, 2016));
+
+                changeChart.update(chartData);
+            });
     }
 
     /**
-     * Set the default/stored map variable value for the current 
+     * Set the default/stored map variable value for the current
      * zoom level
      */
     function setMapDropdownValue() {

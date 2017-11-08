@@ -2,25 +2,13 @@ TCVIZ.Carto.SQL = function(element) {
     // properties
     this.element = element;
 
-    this.geojsonClient = new cartodb.SQL({
-        user: 'ridership',
-        format: 'geojson',
-        api_key: '73537cf8a5e88a4f170a0eda73deab782accaee2'
-    });
+    this.geojsonClient = new cartodb.SQL(TCVIZ.Config.SQL);
 
     switch (this.element) {
-
-    case 'timeSeries':
-        this.queryElements = {
-            table: 'msa_yearly_transit_vars',
-            vars: ['name_msa', 'the_geom', 'year', 'upt_total']
-        };
-        break;
-
     case 'msaMap':
         this.queryElements = {
             table: 'msa_change_transit_vars',
-            vars: ['the_geom', 'name']
+            vars: ['*']
         };
         break;
 
@@ -28,7 +16,7 @@ TCVIZ.Carto.SQL = function(element) {
     case 'censusTracts':
         this.queryElements = {
             table: 'tract_demographic_vars',
-            vars: ['the_geom', 'geoid_t', 'name_msa']
+            vars: ['the_geom', 'geoid_t', 'pp_dns_', 'name_msa', 'name_tr']
         };
         break;
 
@@ -65,5 +53,10 @@ TCVIZ.Carto.SQL = function(element) {
     this.getJson = function(valueField, msa) {
         var sql = this.getSql(valueField, msa);
         return this.geojsonClient.execute(sql);
+    };
+
+    this.getBBoxForMSA = function(msaName) {
+        var sql = 'SELECT the_geom, name_msa FROM tract_demographic_vars WHERE name_msa = \'{{msaName}}\'';
+        return this.geojsonClient.getBounds(sql, {msaName: msaName}, {format: 'json'});
     };
 };

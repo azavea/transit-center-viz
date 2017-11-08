@@ -9,7 +9,7 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
         return this.geojsonClient.execute(sql);
     };
 
-    // Get data for any transit variable
+    // Get data for any pair of transit variables
     this.getTransitData = function(msaId, metricOne, metricTwo) {
         var sql = 'SELECT year, {{metricOne}}, {{metricTwo}} FROM {{table}} WHERE name_msa = \'{{msaId}}\'';
         var params = {
@@ -21,6 +21,7 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
         return this.client.execute(sql, params, {format: 'json'});
     };
 
+    // Map data from Carto SQL response to Chart.js "datasets"
     this.transformTransitData = function (data, metricOne, metricTwo) {
         var dataByYear = {};
         _.each(data.rows, function (row) {
@@ -29,10 +30,10 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
             dataByYear[row.year][metricTwo] = row[metricTwo];
         });
         var chartDatasets = [{
-            label: metricOne,
+            label: this.getLabelForMetric(metricOne),
             data: mapDataByYear(dataByYear, this.years, metricOne)
         }, {
-            label: metricTwo,
+            label: this.getLabelForMetric(metricTwo),
             data: mapDataByYear(dataByYear, this.years, metricTwo)
         }];
         return chartDatasets;
@@ -47,5 +48,19 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
                 }
             });
         }
+    };
+
+    this.getLabelForMetric = function(metric) {
+        // TODO: Move to config?
+        var labels = {
+            'pop_dens': 'Population Density',
+            'total_expenses': 'Total Expenses',
+            'upt_total': 'Total Ridership'
+        };
+        var label = labels[metric] || metric;
+        if (label === metric) {
+            console.warn('No label for metric: ', metric, 'Add new label in sql-charts.js');
+        }
+        return label;
     }
 };

@@ -8,6 +8,7 @@
   right: 0;
   padding: 0 1rem;
   z-index: 100;
+  border-bottom: 3px solid $black;
 
   @media (max-width: 900px) {
     left: 0;

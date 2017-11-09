@@ -265,8 +265,31 @@ TCVIZ.Config = {
         text: 'National Average',
         value: 56
     }],
-    /*
+    circle_sizes: [10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 32.5, 35],
+    symbol_style: {
+        upt_total: {
+            colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
+            colorBreaks: [-0.25,-0.1,0.0,0.5,1]
+        },
+        upt_bus: {
+            colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
+            colorBreaks: [-0.25,-0.1,0.0,0.5,1]
+        }
+        // add rest of the circles
+    },
+    polygon_style: {
+        forgn_c: {
+            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colorBreaks: [-5,-3,0,3,10]
+        },
 
-     */
-    symbol_sizes: [5, 10, 15, 20, 25]
+        drove_c: {
+            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colorBreaks: [-10,-5,0,5,10]
+        },
+        pp_dns_: {
+            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colorBreaks: [-5,-3,0,3,10]
+        },
+    }
 };

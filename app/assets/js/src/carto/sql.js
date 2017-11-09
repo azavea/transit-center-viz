@@ -33,7 +33,6 @@ TCVIZ.Carto.SQL = function(element) {
 
     // methods
     this.getSql = function(valueField, msa) {
-
         var fields;
         if (!this.queryElements.vars.includes(valueField)) {
             fields = this.queryElements.vars.concat(valueField);
@@ -52,6 +51,7 @@ TCVIZ.Carto.SQL = function(element) {
 
     this.getJson = function(valueField, msa) {
         var sql = this.getSql(valueField, msa);
+        console.log(this.element + ": " + sql);
         return this.geojsonClient.execute(sql);
     };
 

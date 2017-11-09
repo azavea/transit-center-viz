@@ -208,6 +208,8 @@ $(document).ready(function() {
             $('#selectize-ridership-chart').selectize(_.extend({}, defaults, {
                 options: nationwide.concat(msa),
                 optgroupField: 'group',
+                valueField: 'absoluteValue',
+                labelField: 'id',
                 optgroups: [
                     {value: 'nationwide', label: 'Ridership'},
                     {value: 'msa', label: 'Census'}
@@ -425,6 +427,9 @@ $(document).ready(function() {
     }
 
     function sizeVar(variable) {
+        if (variable.endsWith('_c')) {
+            variable = variable.slice(0, -2);
+        }
         return (variable + '_y15');
     }
 

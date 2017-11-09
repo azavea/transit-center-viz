@@ -362,7 +362,7 @@ $(document).ready(function() {
                                 selectedLayerDisplayChange: currentLayer.text,
                                 selectedLayerDisplayYear: currentLayer.id,
                                 selectedLayerValue: msaValues[currentLayer.value],
-                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[currentLayer.value + '_y15'])
+                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[sizeVar(currentLayer.value)])
                             });
 
                         e.layer

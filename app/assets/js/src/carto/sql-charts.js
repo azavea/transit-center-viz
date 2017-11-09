@@ -6,7 +6,7 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
 
     // Get data for any pair of transit variables
     this.getTransitData = function(msaId, metrics) {
-        var sql = 'SELECT year, {{metrics}} FROM {{table}} WHERE name_msa = \'{{msaId}}\'';
+        var sql = 'SELECT year, {{metrics}} FROM {{table}} WHERE geoid_msa = \'{{msaId}}\'';
         var params = {
             metrics: metrics.join(', '),
             msaId: msaId,

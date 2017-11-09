@@ -1,43 +1,73 @@
 // The first chart on the page
 TCVIZ.Charts.Ridership = function(elementId) {
 
-    this.update = function(datasets) {
+    this.update = function(chartTitle, datasets) {
         datasets[0] = _.extend({}, this.yLeftDefaults, datasets[0]);
         var scales = [this.yScaleLeft];
         if (datasets.length > 1) {
             datasets[1] = _.extend({}, this.yRightDefaults, datasets[1]);
             scales.push(this.yScaleRight);
         }
-        if (!this.chart || this.chart.options.scales.yAxes.length !== datasets.length) {
-            this.chart = this._createChart({
-                options: {
-                    layout: {
-                        padding: {
-                            left: 5,
-                            right: 5
+        if (this.chart) {
+            this.chart.destroy();
+        }
+        this.chart = new Chart(this.ctx, {
+            type: 'line',
+            data: {
+                labels: this.labels,
+                datasets: datasets
+            },
+            options: {
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 5
+                    }
+                },
+                scales: {
+                    yAxes: scales
+                },
+                title: {
+                    display: true,
+                    text: chartTitle
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+
+                            var valueFormatter = tooltipItem.datasetIndex === 0 ?
+                                TCVIZ.Charts.Formatters.totalRidership :
+                                TCVIZ.Charts.Formatters.number;
+                            label += valueFormatter(tooltipItem.yLabel);
+                            return label;
                         }
-                    },
-                    scales: {
-                        yAxes: scales
                     }
                 }
-            });
-        }
-        this.chart.data.datasets = datasets;
-        this.chart.update();
-    };
-
-    this._createChart = function (chartConfig) {
-        return new Chart(this.ctx, _.extend({}, this.chartConfig, chartConfig));
+            }
+        });
     };
 
     this.yScaleLeft = {
         position: 'left',
-        'id': 'y-axis-left'
+        'id': 'y-axis-left',
+        scaleLabel: {
+            display: true,
+            labelString: 'Total Ridership (millions)'
+        },
+        ticks: {
+            callback: TCVIZ.Charts.Formatters.totalRidership
+        }
     };
     this.yScaleRight = {
         position: 'right',
-        'id': 'y-axis-right'
+        'id': 'y-axis-right',
+        ticks: {
+            callback: TCVIZ.Charts.Formatters.number
+        }
     };
     this.labels = _.range(2006, 2016);
     this.yLeftDefaults = {
@@ -49,14 +79,6 @@ TCVIZ.Charts.Ridership = function(elementId) {
         borderColor: '#f03365',
         fill: false,
         yAxisID: 'y-axis-right'
-    };
-
-    this.chartConfig = {
-        type: 'line',
-        data: {
-            labels: this.labels,
-            datasets: []
-        }
     };
 
     this.ctx = document.getElementById(elementId).getContext('2d');

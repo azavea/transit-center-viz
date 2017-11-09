@@ -1,43 +1,37 @@
 // The first chart on the page
-TCVIZ.Charts.Ridership = function(elementId, config) {
+TCVIZ.Charts.Ridership = function(elementId) {
 
-    this.setOptions = function(options) {
-        if (!options) {
-            options = {};
+    this.update = function(datasets) {
+        datasets[0] = _.extend({}, this.yLeftDefaults, datasets[0]);
+        var scales = [this.yScaleLeft];
+        if (datasets.length > 1) {
+            datasets[1] = _.extend({}, this.yRightDefaults, datasets[1]);
+            scales.push(this.yScaleRight);
         }
-        this.options = _.extend({}, this.defaults, options);
-    };
-
-    this.update = function(yAxisLeft, yAxisRight) {
-        var datasets = [_.extend({}, this.yLeftDefaults, yAxisLeft)];
-        if (yAxisRight) {
-            datasets.push(_.extend({}, this.yRightDefaults, yAxisRight));
-        }
-        if (!this.chart) {
-            this.chart = new Chart(this.ctx, {
-                type: 'line',
-                data: {
-                    labels: this.labels,
-                    datasets: datasets
-                },
-                options: this.options
+        if (!this.chart || this.chart.options.scales.yAxes.length !== datasets.length) {
+            this.chart = this._createChart({
+                options: {
+                    scales: {
+                        yAxes: scales
+                    }
+                }
             });
-        } else {
-            this.chart.data.datasets = datasets;
-            this.chart.update();
         }
+        this.chart.data.datasets = datasets;
+        this.chart.update();
     };
 
-    this.defaults = {
-        scales: {
-            yAxes: [{
-                position: 'left',
-                'id': 'y-axis-left'
-            }, {
-                position: 'right',
-                'id': 'y-axis-right'
-            }]
-        }
+    this._createChart = function (chartConfig) {
+        return new Chart(this.ctx, _.extend({}, this.chartConfig, chartConfig));
+    };
+
+    this.yScaleLeft = {
+        position: 'left',
+        'id': 'y-axis-left'
+    };
+    this.yScaleRight = {
+        position: 'right',
+        'id': 'y-axis-right'
     };
     this.labels = _.range(2006, 2016);
     this.yLeftDefaults = {
@@ -51,7 +45,18 @@ TCVIZ.Charts.Ridership = function(elementId, config) {
         yAxisID: 'y-axis-right'
     };
 
-    this.setOptions(config);
+    this.chartConfig = {
+        type: 'line',
+        data: {
+            labels: this.labels,
+            datasets: []
+        },
+        options: {
+            scales: {
+                yAxes: [this.yScaleLeft, this.yScaleRight]
+            }
+        }
+    };
 
     this.ctx = document.getElementById(elementId).getContext('2d');
     this.chart = null;

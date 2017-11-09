@@ -160,6 +160,10 @@ $(document).ready(function() {
         setMapDropdownValue();
         setMap();
         setChangeChart(TCVIZ.Config.defaultMSA);
+        setRidershipChart(
+            msaToggle.getValue(),
+            TCVIZ.Config.ridershipChartLeftAxisDefault,
+            ridershipChartToggle.getValue());
 
         function setUpEventListeners() {
             setUpSidebarToggle();
@@ -198,11 +202,7 @@ $(document).ready(function() {
                 ]
             }));
             ridershipChartToggle = $('#selectize-ridership-chart')[0].selectize;
-            ridershipChartToggle.setValue(TCVIZ.Config.ridershipChartRightAxisDefault);
-            setRidershipChart(
-                msaToggle.getValue(),
-                TCVIZ.Config.ridershipChartLeftAxisDefault,
-                ridershipChartToggle.getValue());
+            //ridershipChartToggle.setValue(TCVIZ.Config.ridershipChartRightAxisDefault);
         }
 
         function setUpSidebarToggle() {
@@ -366,11 +366,14 @@ $(document).ready(function() {
     function setRidershipChart(msaId, yLeftVariable, yRightVariable) {
         if (!msaId) { return; }
 
-        TCVIZ.Connections.chartSql.getTransitData(msaId, [yLeftVariable, yRightVariable])
+        var variables = [yLeftVariable];
+        if (yRightVariable) { variables.push(yRightVariable); }
+
+        TCVIZ.Connections.chartSql.getTransitData(msaId, variables)
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql
-                    .transformTransitData(data, [yLeftVariable, yRightVariable]);
-                ridershipChart.update(chartData[0], chartData[1]);
+                    .transformTransitData(data, variables);
+                ridershipChart.update(chartData);
             });
     }
 

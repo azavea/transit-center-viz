@@ -16,7 +16,7 @@ TCVIZ.Carto.SQL = function(element) {
     case 'censusTracts':
         this.queryElements = {
             table: 'tract_demographic_vars',
-            vars: ['the_geom', 'geoid_t', 'pp_dns_', 'name_msa', 'name_tr']
+            vars: ['the_geom', 'geoid_t', 'pp_dns_', 'name_msa', 'geoid_msa', 'name_tr']
         };
         break;
 
@@ -44,7 +44,7 @@ TCVIZ.Carto.SQL = function(element) {
         var sql = 'SELECT ' + fields.join() + ' FROM ' + this.queryElements.table;
 
         if (msa !== undefined) {
-            return sql + ' WHERE name_msa=\'' + msa + '\'';
+            return sql + ' WHERE geoid_msa=\'' + msa + '\'';
         } else {
             return sql;
         }
@@ -55,8 +55,8 @@ TCVIZ.Carto.SQL = function(element) {
         return this.geojsonClient.execute(sql);
     };
 
-    this.getBBoxForMSA = function(msaName) {
-        var sql = 'SELECT the_geom, name_msa FROM tract_demographic_vars WHERE name_msa = \'{{msaName}}\'';
-        return this.geojsonClient.getBounds(sql, {msaName: msaName}, {format: 'json'});
+    this.getBBoxForMSA = function(msaId) {
+        var sql = 'SELECT the_geom, geoid_msa FROM tract_demographic_vars WHERE geoid_msa = \'{{msaId}}\'';
+        return this.geojsonClient.getBounds(sql, {msaId: msaId}, {format: 'json'});
     };
 };

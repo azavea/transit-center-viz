@@ -11,7 +11,7 @@ TCVIZ.Config = {
     zoomThreshold: 7,
     defaultNtdField: 'upt_total',
     defaultCensusField: 'pp_dns_',
-    defaultMSA: 56,
+    defaultMSA: 'NNNNN',
     ridershipChartLeftAxisDefault: 'upt_total',
     ridershipChartRightAxisDefault: 'avg_fare',
     nationwide_layers: [{
@@ -69,13 +69,8 @@ TCVIZ.Config = {
     }, {
         text: 'Median Household Income',
         value: 'inc_c'
-    }, {
-        // TODO @eneedham is this the correct text:value comb?
-        text: 'Households Below 200% of Poverty Line',
-        value: 'ppov_c'
-    }, {
-        // TODO @eneedham if so, what is this value?
-        text: '[value for this variable]',
+    },{
+        text: 'Families in Poverty',
         value: 'fpov_c'
     }, {
         text: 'Population Density',
@@ -97,173 +92,173 @@ TCVIZ.Config = {
         value: 'hisp_c'
     }],
     MSA_list: [{
+        text: 'National Average',
+        value: 'NNNNN'
+    }, {
         text: 'Atlanta-Sandy Springs-Roswell, GA',
-        value: 1
+        value: '12060'
     }, {
         text: 'Austin-Round Rock, TX',
-        value: 2
+        value: '12420'
     }, {
         text: 'Baltimore-Columbia-Towson, MD',
-        value: 3
+        value: '12580'
     }, {
         text: 'Birmingham-Hoover, AL',
-        value: 4
+        value: '13820'
     }, {
         text: 'Boston-Cambridge-Newton, MA-NH',
-        value: 5
+        value: '14460'
     }, {
         text: 'Buffalo-Cheektowaga-Niagara Falls, NY',
-        value: 6
+        value: '15380'
     }, {
         text: 'Charlotte-Concord-Gastonia, NC-SC',
-        value: 7
+        value: '16740'
     }, {
         text: 'Chicago-Naperville-Elgin, IL-IN-WI',
-        value: 8
+        value: '16980'
     }, {
         text: 'Cincinnati, OH-KY-IN',
-        value: 9
+        value: '17140'
     }, {
         text: 'Cleveland-Elyria, OH',
-        value: 10
+        value: '17460'
     }, {
         text: 'Columbus, OH',
-        value: 11
+        value: '18140'
     }, {
         text: 'Dallas-Fort Worth-Arlington, TX',
-        value: 12
+        value: '19100'
     }, {
         text: 'Denver-Aurora-Lakewood, CO',
-        value: 13
+        value: '19740'
     }, {
         text: 'Detroit-Warren-Dearborn, MI',
-        value: 14
+        value: '19820'
     }, {
         text: 'Grand Rapids-Wyoming, MI',
-        value: 15
+        value: '24340'
     }, {
         text: 'Hartford-West Hartford-East Hartford, CT',
-        value: 16
+        value: '25540'
     }, {
         text: 'Houston-The Woodlands-Sugar Land, TX',
-        value: 17
+        value: '26420'
     }, {
         text: 'Indianapolis-Carmel-Anderson, IN',
-        value: 18
+        value: '26900'
     }, {
         text: 'Jacksonville, FL',
-        value: 19
+        value: '27260'
     }, {
         text: 'Kansas City, MO-KS',
-        value: 20
+        value: '28140'
     }, {
         text: 'Las Vegas-Henderson-Paradise, NV',
-        value: 21
+        value: '29820'
     }, {
         text: 'Los Angeles-Long Beach-Anaheim, CA',
-        value: 22
+        value: '31080'
     }, {
         text: 'Louisville/Jefferson County, KY-IN',
-        value: 23
+        value: '31140'
     }, {
         text: 'Memphis, TN-MS-AR',
-        value: 24
+        value: '32820'
     }, {
         text: 'Miami-Fort Lauderdale-West Palm Beach, FL',
-        value: 25
+        value: '33100'
     }, {
         text: 'Milwaukee-Waukesha-West Allis, WI',
-        value: 26
+        value: '33340'
     }, {
         text: 'Minneapolis-St. Paul-Bloomington, MN-WI',
-        value: 27
+        value: '33460'
     }, {
         text: 'Nashville-Davidson–Murfreesboro–Franklin, TN',
-        value: 28
+        value: '34980'
     }, {
         text: 'New Orleans-Metairie, LA',
-        value: 29
+        value: '35380'
     }, {
         text: 'New York-Newark-Bridgeport, NY-NJ-PA',
-        value: 30
+        value: '35620'
     }, {
         text: 'Oklahoma City, OK',
-        value: 31
+        value: '36420'
     }, {
         text: 'Orlando-Kissimmee-Sanford, FL',
-        value: 32
+        value: '36740'
     }, {
         text: 'Philadelphia-Camden-Wilmington, PA-NJ-DE-MD',
-        value: 33
+        value: '37980'
     }, {
         text: 'Phoenix-Mesa-Scottsdale, AZ',
-        value: 34
+        value: '38060'
     }, {
         text: 'Pittsburgh, PA',
-        value: 35
+        value: '38300'
     }, {
         text: 'Portland-Vancouver-Hillsboro, OR-WA',
-        value: 36
+        value: '38900'
     }, {
         text: 'Providence-Warwick, RI-MA',
-        value: 37
+        value: '39300'
     }, {
         text: 'Raleigh, NC',
-        value: 38
+        value: '39580'
     }, {
         text: 'Richmond, VA',
-        value: 39
+        value: '40060'
     }, {
         text: 'Riverside-San Bernardino-Ontario, CA',
-        value: 40
+        value: '40140'
     }, {
         text: 'Rochester, NY',
-        value: 41
+        value: '40380'
     }, {
         text: 'Sacramento–Roseville–Arden-Arcade, CA',
-        value: 42
+        value: '40900'
     }, {
         text: 'Salt Lake City, UT',
-        value: 43
+        value: '41620'
     }, {
         text: 'San Antonio-New Braunfels, TX',
-        value: 44
+        value: '41700'
     }, {
         text: 'San Diego-Carlsbad, CA',
-        value: 45
+        value: '41740'
     }, {
         text: 'San Francisco-Oakland-Hayward, CA',
-        value: 46
+        value: '41860'
     }, {
         text: 'San Jose-Sunnyvale-Santa Clara, CA',
-        value: 47
+        value: '41940'
     }, {
         text: 'Seattle-Tacoma-Bellevue, WA',
-        value: 48
+        value: '42660'
     }, {
         text: 'St. Louis, MO-IL',
-        value: 49
+        value: '41180'
     }, {
         text: 'Tampa-St. Petersburg-Clearwater, FL',
-        value: 50
+        value: '45300'
     }, {
         text: 'Tucson, AZ',
-        value: 51
+        value: '46060'
     }, {
         text: 'Tulsa, OK',
-        value: 52
+        value: '46140'
     }, {
         text: 'Urban Honolulu, HI',
-        value: 53
+        value: '46520'
     }, {
         text: 'Virginia Beach-Norfolk-Newport News, VA-NC',
-        value: 54
+        value: '47260'
     }, {
         text: 'Washington-Arlington-Alexandria, DC-VA-MD-WV',
-        value: 55
-    }, {
-        text: 'National Average',
-        value: 56
+        value: '47900'
     }],
     /*
 

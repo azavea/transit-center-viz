@@ -49,15 +49,15 @@ $(document).ready(function() {
         setMap();
     });
     msaToggle.on('change', function() {
-        var msaName = msaValToName(msaToggle.getValue());
-        setRidershipChart(msaName, TCVIZ.Config.ridershipChartLeftAxisDefault, ridershipChartToggle.getValue());
-        setChangeChart(msaName);
+        var msaId = msaToggle.getValue();
+        setRidershipChart(msaId, TCVIZ.Config.ridershipChartLeftAxisDefault, ridershipChartToggle.getValue());
+        setChangeChart(msaId);
 
         // Auto zoom map to selected MSA, or zoom out if National Average selected
-        if (msaName === 'National Average') {
+        if (msaId === 'NNNNN') {
             map.setView(TCVIZ.Config.map.center, TCVIZ.Config.map.zoom);
         } else {
-            TCVIZ.Connections.msaMap.getBBoxForMSA(msaName).done(function(bbox) {
+            TCVIZ.Connections.msaMap.getBBoxForMSA(msaId).done(function(bbox) {
                 map.fitBounds(bbox);
             });
         }
@@ -65,22 +65,20 @@ $(document).ready(function() {
         // TODO: May need to readd setMap() call here
     });
     ridershipChartToggle.on('change', function(value) {
-        var msaName = msaValToName(msaToggle.getValue());
+        var msaId = msaToggle.getValue();
         var yAxisRightVariable = value;
-        setRidershipChart(msaName, TCVIZ.Config.ridershipChartLeftAxisDefault, yAxisRightVariable);
+        setRidershipChart(msaId, TCVIZ.Config.ridershipChartLeftAxisDefault, yAxisRightVariable);
     });
 
     // Listen for button zoom clicks from MSA popups in order to zoom
     // to their extent.
     $('body').on('click', '#msa-popup-zoom', function(e) {
-        var msaName = $(e.target).data('name'),
-            msaOption = _.findWhere(TCVIZ.Config.MSA_list, { text: msaName });
+        var msaId = $(e.target).data('name').toString(),
+            msaOption = _.findWhere(TCVIZ.Config.MSA_list, { value: msaId });
 
         // Set the msa dropdown to the currently selected msa
+        // bounds update triggered by selectize 'change' event
         msaToggle.setValue(msaOption.value);
-        TCVIZ.Connections.msaMap.getBBoxForMSA(msaName).done(function(bbox) {
-            map.fitBounds(bbox);
-        });
     });
 
     $('body').on('click', '#tract-popup-zoom', function() {
@@ -174,7 +172,7 @@ $(document).ready(function() {
         setUpEventListeners();
         setMapDropdownValue();
         setMap();
-        setChangeChart('National Average');
+        setChangeChart('NNNNN');
 
         function setUpEventListeners() {
             setUpSidebarToggle();
@@ -213,7 +211,7 @@ $(document).ready(function() {
                 ]
             }));
             ridershipChartToggle = $('#selectize-ridership-chart')[0].selectize;
-            ridershipChartToggle.setValue(TCVIZ.Config.defaultRidershipValue);
+            ridershipChartToggle.setValue(TCVIZ.Config.ridershipChartRightAxisDefault);
             setRidershipChart(
                 msaToggle.getValue(),
                 TCVIZ.Config.ridershipChartLeftAxisDefault,
@@ -226,15 +224,6 @@ $(document).ready(function() {
                 $('.sidebar').toggleClass('active');
             });
         }
-    }
-
-    /**
-     * Get MSA text
-     * @param  {[type]}
-     * @return {[type]}
-     */
-    function msaValToName(msaVal) {
-        return msaToggle.options[msaVal].text;
     }
 
     /**
@@ -300,14 +289,13 @@ $(document).ready(function() {
      */
     function setMSAGeoJSONLayer() {
         var valueField = layerToggle.items[0];
-        var msa = msaToggle.items[0];
-        msa = msaValToName(msa);
+        var msaId = msaToggle.items[0];
         if (valueField !== undefined) {
             if (map.hasLayer(featureGroup)) {
                 map.removeLayer(featureGroup);
             }
             TCVIZ.State.censusField = valueField;
-            TCVIZ.Connections.tractMap.getJson(valueField, msa)
+            TCVIZ.Connections.tractMap.getJson(valueField, msaId)
                 .done(function(data) {
                     data = removeNAs(data, valueField);
                     featureGroup = L.geoJson(data, {
@@ -401,10 +389,10 @@ $(document).ready(function() {
     /**
      * Set time series plot based on selectize input
      */
-    function setRidershipChart(msaName, yLeftVariable, yRightVariable) {
-        if (!msaName) { return; }
+    function setRidershipChart(msaId, yLeftVariable, yRightVariable) {
+        if (!msaId) { return; }
 
-        TCVIZ.Connections.chartSql.getTransitData(msaName, [yLeftVariable, yRightVariable])
+        TCVIZ.Connections.chartSql.getTransitData(msaId, [yLeftVariable, yRightVariable])
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql
                     .transformTransitData(data, [yLeftVariable, yRightVariable]);
@@ -412,11 +400,11 @@ $(document).ready(function() {
             });
     }
 
-    function setChangeChart(msaName) {
-        if (!msaName) { return; }
+    function setChangeChart(msaId) {
+        if (!msaId) { return; }
 
         var metrics = ['pop_chg', 'upt_rail_chg', 'upt_bus_chg'];
-        TCVIZ.Connections.chartSql.getTransitData(msaName, metrics)
+        TCVIZ.Connections.chartSql.getTransitData(msaId, metrics)
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql
                     .transformTransitData(data, metrics, _.range(2010, 2016));

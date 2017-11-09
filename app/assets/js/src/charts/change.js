@@ -13,6 +13,7 @@ TCVIZ.Charts.Change = function(elementId, config) {
         _.each(datasets, function(data, index) {
             // chart data received as values between 0-1, map to 0-100
             data.data = _.map(data.data, function(d) { return d * 100; });
+            delete data.label;
             _.extend(self.chart.data.datasets[index], data);
         });
         this.chart.update();
@@ -24,10 +25,13 @@ TCVIZ.Charts.Change = function(elementId, config) {
         fill: false
     };
     this.datasets = [_.extend({}, this.yLeftDefaults, {
+        label: 'Population Change (%)',
         borderColor: '#bd33f0'
     }), _.extend({}, this.yLeftDefaults, {
+        label: 'Rail Ridership Change (%)',
         borderColor: '#f0bd33'
     }), _.extend({}, this.yLeftDefaults, {
+        label: 'Bus Ridership Change (%)',
         borderColor: '#65f033'
     })];
     this.setOptions(config);

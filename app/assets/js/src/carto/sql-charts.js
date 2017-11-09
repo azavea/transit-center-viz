@@ -55,17 +55,8 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
 
     this.getLabelForMetric = function(metric) {
         // TODO: Move to config?
-        var labels = {
-            'pop_dens': 'Population Density',
-            'total_expenses': 'Total Expenses',
-            'upt_total': 'Total Ridership',
-            'upt_rail': 'Rail Ridership',
-            'upt_bus': 'Bus Ridership'
-        };
-        var label = labels[metric] || metric;
-        // if (label === metric) {
-        //     console.warn('No label for metric: ', metric, 'Add new label in sql-charts.js');
-        // }
-        return label;
+        var variables = TCVIZ.Config.nationwide_layers.concat(TCVIZ.Config.MSA_layers);
+        var variable = _.findWhere(variables, {value: metric});
+        return variable && variable.text ? variable.text : metric;
     };
 };

@@ -11,6 +11,12 @@ TCVIZ.Charts.Ridership = function(elementId) {
         if (!this.chart || this.chart.options.scales.yAxes.length !== datasets.length) {
             this.chart = this._createChart({
                 options: {
+                    layout: {
+                        padding: {
+                            left: 5,
+                            right: 5
+                        }
+                    },
                     scales: {
                         yAxes: scales
                     }
@@ -50,11 +56,6 @@ TCVIZ.Charts.Ridership = function(elementId) {
         data: {
             labels: this.labels,
             datasets: []
-        },
-        options: {
-            scales: {
-                yAxes: [this.yScaleLeft, this.yScaleRight]
-            }
         }
     };
 

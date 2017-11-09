@@ -54,7 +54,7 @@ $(document).ready(function() {
         setChangeChart(msaId);
 
         // Auto zoom map to selected MSA, or zoom out if National Average selected
-        if (msaId === 'NNNNN') {
+        if (msaId === TCVIZ.Config.defaultMSA) {
             map.setView(TCVIZ.Config.map.center, TCVIZ.Config.map.zoom);
         } else {
             TCVIZ.Connections.msaMap.getBBoxForMSA(msaId).done(function(bbox) {
@@ -82,8 +82,8 @@ $(document).ready(function() {
     });
 
     $('body').on('click', '#tract-popup-zoom', function() {
+        // Toggle change handles map zoom
         msaToggle.setValue(TCVIZ.Config.defaultMSA);
-        map.setZoom(TCVIZ.Config.zoomThreshold);
     });
 
     map.on('zoomstart', onZoomStart);
@@ -172,7 +172,7 @@ $(document).ready(function() {
         setUpEventListeners();
         setMapDropdownValue();
         setMap();
-        setChangeChart('NNNNN');
+        setChangeChart(TCVIZ.Config.defaultMSA);
 
         function setUpEventListeners() {
             setUpSidebarToggle();

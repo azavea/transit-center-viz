@@ -293,12 +293,12 @@ $(document).ready(function() {
 
         if (isNationWide()) {
             var circleCtx = {
-                    layerName: '2015: ' + _.findWhere(TCVIZ.Config.nationwide_layers, { value: layerId}).id,
+                    layerName: '2015: ' + nationalLabelForKey(layerId, 'id'),
                     lowVal: _.first(TCVIZ.State.sizeBreaks),
                     highVal: _.last(TCVIZ.State.sizeBreaks),
                 },
                 breakCtx = _.assign(layerConfig, {
-                    layerName: _.findWhere(TCVIZ.Config.nationwide_layers, { value: layerId}).text,
+                    layerName: nationalLabelForKey(layerId, 'text'),
                 });
 
             $('#legend-inner').html(TCVIZ.Templates.legend(breakCtx));
@@ -306,8 +306,9 @@ $(document).ready(function() {
                 $('#legend-circle-inner').html(TCVIZ.Templates.legendCircle(circleCtx));
             }
         } else {
+            var useLayerConfig = true;
             var ctx = _.assign(layerConfig, {
-                layerName: _.findWhere(TCVIZ.Config.MSA_layers, { value: layerId}).text,
+                layerName: msaLabelForId(layerId, useLayerConfig),
             });
 
             $('#legend-inner').html(TCVIZ.Templates.legend(ctx));
@@ -510,8 +511,18 @@ $(document).ready(function() {
         };
     }
 
-    function msaLabelForId(msaId) {
-        var msa = _.findWhere(TCVIZ.Config.MSA_list, {value: msaId});
+    /**
+     * For a given layer ID, return the text label.  Defaults to
+     * MSA_list unless `useLayerConfig` param is set to true
+     */
+    function msaLabelForId(msaId, useLayerConfig) {
+        var config = useLayerConfig ? TCVIZ.Config.MSA_layers : TCVIZ.Config.MSA_list;
+        var msa = _.findWhere(config, {value: msaId});
         return msa && msa.text ? msa.text : msaId;
+    }
+
+    function nationalLabelForKey(layerId, key) {
+        var layer = _.findWhere(TCVIZ.Config.nationwide_layers, {value: layerId});
+        return layer && layer[key] ? layer[key]: layerId;
     }
 });

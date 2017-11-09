@@ -46,6 +46,8 @@ $(document).ready(function() {
     TCVIZ.Templates = {
         msaPopup: _.template($('#msa-popup-tmpl').html()),
         tractPopup: _.template($('#tract-popup-tmpl').html()),
+        legend: _.template($('#ramp-legend-tmpl').html()),
+        legendCircle: _.template($('#circle-legend-tmpl').html()),
     };
 
     /*
@@ -58,6 +60,7 @@ $(document).ready(function() {
      */
     layerToggle.on('change', function() {
         setMap();
+        setLegend(layerToggle.getValue());
     });
     msaToggle.on('change', function() {
         var msaId = msaToggle.getValue();
@@ -73,6 +76,7 @@ $(document).ready(function() {
             });
         }
 
+        setLegend(msaId);
         // TODO: May need to readd setMap() call here
     });
     ridershipChartToggle.on('change', function(value) {
@@ -170,6 +174,7 @@ $(document).ready(function() {
         setUpEventListeners();
         setMapDropdownValue();
         setMap();
+        setLegend(TCVIZ.Config.defaultNtdField);
 
         setChangeChart(TCVIZ.Config.defaultMSA);
         setRidershipChart(
@@ -276,6 +281,40 @@ $(document).ready(function() {
         }
     }
 
+    function setLegend(layerId) {
+        var style = isNationWide() ? 'symbol_style' : 'polygon_style',
+            layerConfig = TCVIZ.Config[style][layerId];
+
+        // Symbology may not have been defined
+        if (!layerConfig) {
+            $('#legend-inner').html('');
+            return;
+        }
+
+        if (isNationWide()) {
+            var circleCtx = {
+                    layerName: '2015: ' + _.findWhere(TCVIZ.Config.nationwide_layers, { value: layerId}).id,
+                    lowVal: _.first(TCVIZ.State.sizeBreaks),
+                    highVal: _.last(TCVIZ.State.sizeBreaks),
+                },
+                breakCtx = _.assign(layerConfig, {
+                    layerName: _.findWhere(TCVIZ.Config.nationwide_layers, { value: layerId}).text,
+                });
+
+            $('#legend-inner').html(TCVIZ.Templates.legend(breakCtx));
+            if (TCVIZ.State.sizeBreaks) {
+                $('#legend-circle-inner').html(TCVIZ.Templates.legendCircle(circleCtx));
+            }
+        } else {
+            var ctx = _.assign(layerConfig, {
+                layerName: _.findWhere(TCVIZ.Config.MSA_layers, { value: layerId}).text,
+            });
+
+            $('#legend-inner').html(TCVIZ.Templates.legend(ctx));
+            $('#legend-circle-inner').html('');
+        }
+
+    }
 
     function renderFormat(renderer, val) {
         if (val === null || val === undefined) { return 'Not Available'; }
@@ -343,11 +382,11 @@ $(document).ready(function() {
             TCVIZ.Connections.msaMap.getJson(valueField)
                 .done(function(data) {
                     data = removeNAs(data, valueField);
-                    var sizeBreaks = getBreaks(data, sizeVar(valueField), 10);
+                    TCVIZ.State.sizeBreaks = getBreaks(data, sizeVar(valueField), 10);
                     featureGroup = L.geoJson(data, {
                         pointToLayer: function(feature, latlng) {
                             return new L.CircleMarker(latlng,
-                                styleCircles(feature, valueField, sizeBreaks)
+                                styleCircles(feature, valueField, TCVIZ.State.sizeBreaks)
                             );
                         }
                     });
@@ -371,6 +410,7 @@ $(document).ready(function() {
                     });
 
                     map.addLayer(featureGroup);
+                    setLegend(valueField);
                 });
         }
     }

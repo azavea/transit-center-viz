@@ -54,3 +54,43 @@
 .leaflet-popup-content label {
   font-weight: bold;
 }
+
+#legend {
+  position: absolute;
+  bottom: 30px;
+  right: 10px;
+  z-index: 10000;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+
+}
+
+.legend-list {
+  list-style-type: none;
+}
+
+.legend-label {
+  display: inline-block;
+  width: 49px;
+}
+.legend-swatch {
+  display: inline-block;
+  width: 50px;
+  height: 15px;
+  border: 1px solid #ccc;
+}
+
+#legend circle {
+  fill-opacity: 0;
+  stroke: black;
+  stroke-width: 3px;
+}
+
+.legend-low {
+  float: left;
+}
+
+.legend-high {
+  float: right;
+}

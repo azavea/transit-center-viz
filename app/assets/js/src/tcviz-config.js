@@ -355,11 +355,9 @@ TCVIZ.Config = {
             colors: ['#009b9e', '#f3e0f7', '#d1afe8', '#9f82ce', '#63589f'],
             colorBreaks: [-0.025,0.1,0.5,0.75,1]
         },
-        //   TODO: missing cartography for:
-        //      gas (change in gas prices)
         gas_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
+            colorBreaks: [-0.1,-0.05,0.0,0.1,0.25]
         }
     },
 
@@ -387,48 +385,35 @@ TCVIZ.Config = {
 
         inc_c: {
             colors: ['#d01c8b', '#f1b6da', '#f7f7f7', '#b8e186', '#4d9221'],
-            colorBreaks: [10000,-5000,0,5000,10000]
+            colorBreaks: [-10000,-5000,0,5000,10000]
         },
-        //   TODO: missing cartography for:
-        //      pp_dns_ (population density)
-        //      veh_c (households no vehicle)
-        //      ppov_c (households below 200% of poverty line)
-        //      fpov_c (undefined ?)
-        //      black_c (Pct Black)
-        //      asian_c (Pct Asian)
-        //      hisp_c (Pct Hispanic)
-        //      white_c (Pct white)
         pp_dn_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colorBreaks: [-1000,-50,0,50,1000]
         },
         veh_c: {
-            colors: [],
-            colorBreaks: []
-        },
-        ppov_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colorBreaks: [-5,-2,0,2,5]
         },
         fpov_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b'],
+            colorBreaks: [-5,-2,0,2,5]
         },
         black_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colorBreaks: [-5,-2,0,2,5]
         },
         asian_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colorBreaks: [-5,-2,0,2,5]
         },
         hisp_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colorBreaks: [-5,-2,0,2,5]
         },
         white_c: {
-            colors: [],
-            colorBreaks: []
+            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colorBreaks: [-5,-2,0,2,5]
         }
     }
 

@@ -105,51 +105,38 @@ $(document).ready(function() {
     }
 
     /**
-     * Get breaks of a variable
-     * @param  {GeoJSON} featureGroup Returned from SQL query
-     * @param  {string}  variable     Variable being mapped
-     * @return {array}                An array of quintile breaks for this variable
-     */
-    function getQuintiles(featureGroup, variable) {
-        var varArray = _.map(featureGroup.features,
-            function(x) {
-                return x.properties[variable];
-            });
-        var theLimits = chroma.limits(varArray, 'q', 5);
-        return theLimits;
-    }
-
-    /**
      * Find which quintile bucket a value falls into
      * @param  {object} feature  One object in featuregroug
      * @param  {string} variable Variable being mapped
      * @param  {array}  limits   Array of quintile breaks in cont. var
      * @return {integer}         Integer 0-4 bucket that the value falls into
      */
-    function getBucket(feature, variable, limits) {
+    function getBucket(feature, variable, breaks) {
         var v = feature.properties[variable];
-        for (var i = limits.length; i > 0; i--) {
-            if (v <= limits[i] && v > limits[i - 1]) {
-                return i - 1;
+        for (var i = breaks.length; i >= 0; i--) {
+            if (v > breaks[i]) {
+                return i;
+            }
+            if (v < breaks[0]) {
+                return 0;
             }
         }
     }
 
     /**
-     * Style graduated symbols based on selected variables
-     * TODO: currently this is not implemented, was not working
-     * @param  {objext} feature  An individual msa
-     * @param  {string} variable The variable being mapped
-     * @param  {array}  limits   An array of quintile breaks for this variable
-     * @return {object}          An object with style parameters
+     * Get breaks of a variable
+     * @param  {GeoJSON} featureGroup Returned from SQL query
+     * @param  {string}  variable     Variable being mapped
+     * @return {array}                An array of quintile breaks for this variable
      */
-    // function styleCircles(feature, variable, limits) {
-    //     return {
-    //         radius: TCVIZ.Config.symbol_sizes[getBucket(feature, variable, limits)],
-    //         fillOpacity: 0.5,
-    //         color: '#0000FF'
-    //     };
-    // }
+    function getBreaks(featureGroup, variable, n) {
+        var varArray = _.map(featureGroup.features,
+            function(x) {
+                return x.properties[variable];
+            });
+        var theBreaks = chroma.limits(varArray, 'q', n);
+        return theBreaks;
+    }
 
     /**
      * Determine whether the app is zoomed out beyond nationwide
@@ -256,9 +243,6 @@ $(document).ready(function() {
 
     /**
      * Remove objects with an NA value for a particular key
-     * @param  {GeoJSON}
-     * @param  {String}
-     * @return {GeoJSON}
      */
     function removeNAs(geoJson, field) {
         geoJson.features = _.filter(geoJson.features, function(d) {
@@ -278,11 +262,19 @@ $(document).ready(function() {
         }
     }
 
-    /*
-    Note: I think that these polygons and the graduated symbols are
-    both not filled with color because of some css that I included
-    to style the time series chart
-     */
+
+    function renderFormat(renderer, val) {
+        if (val === null || val === undefined) { return 'Not Available'; }
+
+        switch (renderer) {
+        case 'number':
+            return val.toLocaleString();
+        case 'money':
+            return '$' + val.toLocaleString();
+        default:
+            return val;
+        }
+    }
 
     /**
      * Set polygon layer of MSAs
@@ -299,11 +291,9 @@ $(document).ready(function() {
                 .done(function(data) {
                     data = removeNAs(data, valueField);
                     featureGroup = L.geoJson(data, {
-                        // TODO style geojson layer
-                        color: '#000FFF',
-                        stroke: false,
-                        weight: 1,
-                        fillOpacity: 0.75
+                        style: function(feature) {
+                            return stylePolygons(feature, valueField);
+                        }
                     });
                     map.addLayer(featureGroup);
 
@@ -326,20 +316,6 @@ $(document).ready(function() {
         }
     }
 
-
-    function renderFormat(renderer, val) {
-        if (val === null || val === undefined) { return 'Not Available'; }
-
-        switch (renderer) {
-        case 'number':
-            return val.toLocaleString();
-        case 'money':
-            return '$' + val.toLocaleString();
-        default:
-            return val;
-        }
-    }
-
     /**
      * Set a nationwide point layer
      */
@@ -353,14 +329,12 @@ $(document).ready(function() {
             TCVIZ.Connections.msaMap.getJson(valueField)
                 .done(function(data) {
                     data = removeNAs(data, valueField);
-                    var limits = getQuintiles(data, valueField);
+                    var sizeBreaks = getBreaks(data, sizeVar(valueField), 10);
                     featureGroup = L.geoJson(data, {
                         pointToLayer: function(feature, latlng) {
-                            return new L.CircleMarker(latlng, {
-                                radius: TCVIZ.Config.symbol_sizes[getBucket(feature, valueField, limits)],
-                                fillOpacity: 0.4,
-                                color: '#0000FF'
-                            });
+                            return new L.CircleMarker(latlng,
+                                styleCircles(feature, valueField, sizeBreaks)
+                            );
                         }
                     });
 
@@ -432,5 +406,46 @@ $(document).ready(function() {
                 layerToggle.setValue(TCVIZ.Config.defaultCensusField);
             }
         }
+    }
+
+    function sizeVar(variable) {
+        return (variable + '_y15');
+    }
+
+    /**
+     * Style graduated symbols based on selected variables
+     */
+    function styleCircles(feature, colorVariable, sizeBreaks) {
+        var styleData = TCVIZ.Config.symbol_style[colorVariable];
+        var sizeVariable = sizeVar(colorVariable);
+        var sizeBucket = getBucket(feature, sizeVariable, sizeBreaks);
+        var size = TCVIZ.Config.circle_sizes[sizeBucket];
+        var colorBreak = getBucket(feature, colorVariable, styleData.colorBreaks);
+        var color = styleData.colors[colorBreak];
+        return {
+            radius: size,
+            fillOpacity: 0.8,
+            color: '#000000',
+            width: 0.5,
+            opacity: 0.9,
+            fillColor: color
+        };
+    }
+
+    /**
+     * Style polygons
+     */
+    function stylePolygons(feature, colorVariable) {
+        var styleData = TCVIZ.Config.polygon_style[colorVariable];
+        var colorBucket = getBucket(feature, colorVariable, styleData.colorBreaks);
+        var color = styleData.colors[colorBucket];
+        return {
+            color: '#000000',
+            fillColor: color,
+            stroke: true,
+            weight: 0.5,
+            opacity: 0.5,
+            fillOpacity: 0.6
+        };
     }
 });

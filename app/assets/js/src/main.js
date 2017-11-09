@@ -77,10 +77,8 @@ $(document).ready(function() {
             msaOption = _.findWhere(TCVIZ.Config.MSA_list, { value: msaId });
 
         // Set the msa dropdown to the currently selected msa
+        // bounds update triggered by selectize 'change' event
         msaToggle.setValue(msaOption.value);
-        TCVIZ.Connections.msaMap.getBBoxForMSA(msaId).done(function(bbox) {
-            map.fitBounds(bbox);
-        });
     });
 
     $('body').on('click', '#tract-popup-zoom', function() {
@@ -290,8 +288,8 @@ $(document).ready(function() {
      * Set polygon layer of MSAs
      */
     function setMSAGeoJSONLayer() {
-        var valueField = layerToggle.getValue();
-        var msaId = msaToggle.getValue();
+        var valueField = layerToggle.items[0];
+        var msaId = msaToggle.items[0];
         if (valueField !== undefined) {
             if (map.hasLayer(featureGroup)) {
                 map.removeLayer(featureGroup);

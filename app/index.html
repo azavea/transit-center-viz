@@ -93,6 +93,13 @@
       <!-- Leaflet map here -->
       <div class="map-inner" id="map">
       </div>
+      <div class="legend" id="legend">
+        <h4>Legend</h4>
+        <div id="legend-inner">
+        </div>
+        <div id="legend-circle-inner">
+        </div>
+      </div>
     </div>
     <!-- Map -->
   </div>
@@ -180,7 +187,44 @@
         </a>
     </div>
   </script>
+
+  <script id="ramp-legend-tmpl" type="text/template">
+    <div>
+        <h6><%= layerName %></h6>
+        <ul class="legend-list">
+            <% _.each(colors, function(item, idx) { %>
+                <li class="legend-row">
+                    <% if (idx === colors.length-1) { %>
+                        <label class="legend-label">&#62; <%=colorBreaks[idx-1]%></label>
+                    <% } else { %>
+                        <label class="legend-label">&#60; <%=colorBreaks[idx]%></label>
+                    <% } %>
+                    <div class="legend-swatch"
+                          style="background-color: <%=item%>;"></div>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+  </script>
+
+  <script id="circle-legend-tmpl" type="text/template">
+    <div>
+        <h6><%= layerName %></h6>
+        <svg width="280" height="80">
+          <!--Radius sizes were selected from the configured circle_sizes -->
+          <circle cx="40" cy="40" r="10"></circle>
+          <circle cx="80" cy="40" r="15"></circle>
+          <circle cx="135" cy="40" r="25"></circle>
+          <circle cx="210" cy="40" r="35"></circle>
+        </svg>
+        <div>
+            <span class="legend-low">&#60; <%= lowVal.toLocaleString() %></span>
+            <span class="legend-high">&#62; <%= highVal.toLocaleString() %></span>
+        </div>
+    </div>
+  </script>
   <!-- scripts -->
+
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>

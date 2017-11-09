@@ -29,8 +29,19 @@ $(document).ready(function() {
     TCVIZ.Connections.tractMap = new TCVIZ.Carto.SQL('censusTracts');
 
     // Init charts
-    var ridershipChart = new TCVIZ.Charts.Ridership('time-series-1', {});
-    var changeChart = new TCVIZ.Charts.Change('time-series-2', {});
+    _.extend(Chart.defaults.global.tooltips, {
+        mode: 'nearest',
+        backgroundColor: '#f4f5f7',
+        titleFontColor: '#000',
+        bodyFontColor: '#000',
+        borderColor: '#000',
+        borderWidth: 2,
+        xPadding: 10,
+        yPadding: 10,
+        titleMarginBottom: 10
+    });
+    var ridershipChart = new TCVIZ.Charts.Ridership('time-series-1');
+    var changeChart = new TCVIZ.Charts.Change('time-series-2');
 
     TCVIZ.Templates = {
         msaPopup: _.template($('#msa-popup-tmpl').html()),
@@ -159,6 +170,7 @@ $(document).ready(function() {
         setUpEventListeners();
         setMapDropdownValue();
         setMap();
+
         setChangeChart(TCVIZ.Config.defaultMSA);
         setRidershipChart(
             msaToggle.getValue(),
@@ -374,7 +386,7 @@ $(document).ready(function() {
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql
                     .transformTransitData(data, variables);
-                ridershipChart.update(chartData);
+                ridershipChart.update(msaLabelForId(msaId), chartData);
             });
     }
 
@@ -387,7 +399,7 @@ $(document).ready(function() {
                 var chartData = TCVIZ.Connections.chartSql
                     .transformTransitData(data, metrics, _.range(2010, 2016));
 
-                changeChart.update(chartData);
+                changeChart.update(msaLabelForId(msaId), chartData);
             });
     }
 
@@ -451,5 +463,10 @@ $(document).ready(function() {
             opacity: 0.5,
             fillOpacity: 0.6
         };
+    }
+
+    function msaLabelForId(msaId) {
+        var msa = _.findWhere(TCVIZ.Config.MSA_list, {value: msaId});
+        return msa && msa.text ? msa.text : msaId;
     }
 });

@@ -72,79 +72,79 @@ TCVIZ.Config = {
     MSA_layers: [{
         text: 'Population Density (gross change)',
         value: 'pp_dn_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pop_dens',
         render: 'number',
         id: 'Population Density'
     }, {
         text: '% Drove Alone Commute (change total %)',
         value: 'drove_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_drove_alone',
         render: 'percent',
         id: '% Drove Alone Commute'
     }, {
         text: '% Public Transit Commute (change total %)',
         value: 'trnst_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_transit',
         render: 'percent',
         id: '% Public Transit Commute'
     }, {
         text: '% Carpool Commute (change total %)',
         value: 'carpl_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_carpooled',
         render: 'percent',
         id: '% Carpool Commute'
     }, {
         text: '% Civilian Employed (change total %)',
         value: 'emp_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_emp',
         render: 'percent',
         id: '% Civilian Employed'
     }, {
         text: '% Households with No Vehicle (change total %)',
         value: 'veh_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_hh_no_vehicle',
         render: 'percent',
         id: '% Households with No Vehicle'
     }, {
         text: 'Median Household Income (gross change)',
         value: 'inc_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'med_hh_inc',
         render: 'money',
         id: 'Median Household Income'
     },{
         text: '% Families in Poverty (change total %)',
         value: 'fpov_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_fam_pov',
         render: 'percent',
         id: '% Families in Poverty'
     },{
         text: '% Population Foregin Born (change total %)',
         value: 'forgn_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_pop_foreign',
         render: 'percent',
         id: '% Population Foreign Born'
     }, {
         text: '% Black (change total %)',
         value: 'black_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_black',
         render: 'percent',
         id: '% Black'
     }, {
         text: '% Asian (change total %)',
         value: 'asian_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_asian',
         render: 'percent',
         id: '% Asian'
     }, {
         text: '% White (change total %)',
         value: 'white_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_white',
         render: 'percent',
         id: '% White'
     }, {
         text: '% Hispanic/Latino of any race (change total %)',
         value: 'hisp_c',
-        absoluteValue: 'upt_rail',
+        absoluteValue: 'pct_hisp',
         render: 'percent',
         id: '% Hispanic/Latino of any race'
     }],

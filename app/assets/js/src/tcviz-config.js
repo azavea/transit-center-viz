@@ -15,81 +15,116 @@ TCVIZ.Config = {
     ridershipChartLeftAxisDefault: 'upt_total',
     ridershipChartRightAxisDefault: 'avg_fare',
     nationwide_layers: [{
-        text: 'Total Ridership',
+        text: 'Total Ridership (% change)',
         value: 'upt_total',
         render: 'number',
+        id: 'Total Ridership'
     }, {
-        text: 'Bus Ridership',
+        text: 'Bus Ridership (% change)',
         value: 'upt_bus',
         render: 'number',
+        id: 'Bus Ridership'
     }, {
-        text: 'Rail Ridership',
+        text: 'Rail Ridership (% change)',
         value: 'upt_rail',
         render: 'number',
+        id: 'Rail Ridership'
     }, {
-        text: 'Average Fare',
+        text: 'Average Fare (gross change)',
         value: 'avg_fare',
         render: 'money',
+        id: 'Average Fare'
     }, {
-        text: 'Average Speed',
+        text: 'Average Speed (gross change)',
         value: 'average_speed',
         render: 'number',
+        id: 'Average Speed'
     }, {
-        text: 'Farebox Recovery',
+        text: 'Farebox Recovery (gross change)',
         value: 'farebox_recovery',
         render: 'money',
+        id: 'Farebox Recovery'
     }, {
-        text: 'Vehicle Revenue Miles',
+        text: 'Vehicle Revenue Miles (% change)',
         value: 'revenue_miles',
         render: 'number',
+        id: 'Vehicle Revenue Miles'
     }, {
-        text: 'Expenses',
+        text: 'Expenses (% change)',
         value: 'total_expenses',
         render: 'money',
+        id: 'Expenses'
     }, {
-        text: 'Statewide Gas Prices',
+        text: 'Statewide Gas Prices (% change)',
         value: 'gas',
         render: 'money',
+        id: 'Statewide Gas Prices'
     }],
     MSA_layers: [{
-        text: 'Percent Commute by Driving',
-        value: 'drove_c'
+        text: 'Population Density (gross change)',
+        value: 'pp_dns_',
+        render: 'number',
+        id: 'Population Density'
     }, {
-        text: 'Percent Commute by Public Transit',
-        value: 'trnst_c'
+        text: '% Drove Alone Commute (change total %)',
+        value: 'drove_c',
+        render: 'percent',
+        id: '% Drove Alone Commute'
     }, {
-        text: 'Percent Commute by Carpool',
-        value: 'carpl_c'
+        text: '% Public Transit Commute (change total %)',
+        value: 'trnst_c',
+        render: 'percent',
+        id: '% Public Transit Commute'
     }, {
-        text: 'Total Employment',
-        value: 'emp_c'
+        text: '% Carpool Commute (change total %)',
+        value: 'carpl_c',
+        render: 'percent',
+        id: '% Carpool Commute'
     }, {
-        text: 'Households with No Vehicle',
-        value: 'veh_c'
+        text: '% Civilian Employed (change total %)',
+        value: 'emp_c',
+        render: 'percent',
+        id: '% Civilian Employed'
     }, {
-        text: 'Median Household Income',
-        value: 'inc_c'
+        text: '% Households with No Vehicle (change total %)',
+        value: 'veh_c',
+        render: 'percent',
+        id: '% Households with No Vehicle'
+    }, {
+        text: 'Median Household Income (gross change)',
+        value: 'inc_c',
+        render: 'money',
+        id: 'Median Household Income'
     },{
-        text: 'Families in Poverty',
-        value: 'fpov_c'
+        text: '% Families in Poverty (change total %)',
+        value: 'fpov_c',
+        render: 'percent',
+        id: '% Families in Poverty'
+    },{
+        text: '% Population Foregin Born (change total %)',
+        value: 'forgn_c',
+        render: 'percent',
+        id: '% Population Foreign Born'
     }, {
-        text: 'Population Density',
-        value: 'pp_dns_'
+        text: '% Black (change total %)',
+        value: 'black_c',
+        render: 'percent',
+        id: '% Black'
     }, {
-        text: 'Total Population Foregin Born',
-        value: 'forgn_c'
+        text: '% Asian (change total %)',
+        value: 'asian_c',
+        render: 'percent',
+        id: '% Asian'
     }, {
-        text: 'Percent Black',
-        value: 'black_c'
+        text: '% White (change total %)',
+        value: 'white_c',
+        render: 'percent',
+        id: '% White'
     }, {
-        text: 'Percent Asian',
-        value: 'asian_c'
-    }, {
-        text: 'Percent White',
-        value: 'white_c'
-    }, {
-        text: 'Percent Hispanic/Latino of any race',
-        value: 'hisp_c'
+        text: '% Hispanic/Latino of any race (change total %)',
+        value: 'hisp_c',
+        render: 'percent',
+        id: '% Hispanic/Latino of any race'
     }],
     MSA_list: [{
         text: 'National Average',

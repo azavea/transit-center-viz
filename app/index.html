@@ -62,24 +62,6 @@
       </div>
       <!-- MSA Selection box -->
       <div class="sidebar--inner">
-
-        <!-- Card of content -->
-        <div class="card">
-          <div class="card--inner">
-            <!-- Content of cards needs to fall inside
-            of the .card-list > li -->
-            <ul class="card--list">
-            <li>list item 1</li>
-            <li>
-              <ul class="card--list">
-                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat, animi, dolor. Dicta, expedita, similique, perferendis rem velit mollitia quaerat quae ipsa eos odio amet blanditiis atque. Laboriosam reiciendis esse voluptates?</li>
-              </ul>
-            </li>
-            </ul>
-          </div>
-        </div>
-        <!-- Card of content -->
-
         <!-- Card of content -->
         <div class="card">
           <select name="" id="selectize-ridership-chart" class="selectize" placeholder="Select a variable"></select>
@@ -137,8 +119,10 @@
         <div class="modal-container--inner">
           <!-- Descriptive content about the app -->
           <h4>About this application</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis asperiores, voluptate corporis, animi corrupti numquam magni eaque eos quasi suscipit harum amet fugit deleniti. Labore, ex molestiae tempora quod dicta!</p>
-        </div>
+          <p>This project, part of TransitCenter’s <a href="http://transitcenter.org/initiatives/ridership/" target="_blank">Ridership Initiative</a>, visualizes trends in transit and census data for the top 55 Metropolitan Statistical Areas (MSAs) in the United States by population.</p>
+          <p>TransitCenter and <a href="https://www.azavea.com/" target="_blank">Azavea</a> collected transit data for this project from the <a href="https://www.transit.dot.gov/ntd/ntd-data" target="_blank">National Transit Database</a> from 2006 to 2015, assigning transit agencies to MSAs based on their headquarters' locations. Census data are from the U.S. Census Bureau's 5-year <a href="https://www.census.gov/programs-surveys/acs/" target="_blank">American Community Survey</a> estimates from 2010 to 2015.</p>
+          <p>Visit the project’s GitHub repository to learn more, and email <a href="ridership@transitcenter.org" target="_blank">ridership@transitcenter.org</a> with any questions or comments.</p>
+      </div>
       </div>
     </div>
   </div>
@@ -166,22 +150,13 @@
     <div id="msa-popup">
         <h4><%= name_ms %></h4>
         <div>
-            <label>2015 Annual Ridership</label>
-            <div><%= upt_total_y15.toLocaleString() %></div>
-        </div>
-        <div>
-            <label>Change in ridership (2006-2015)</label>
-            <div><%= (upt_total * 100).toFixed(2) + "%" %></div>
-        </div>
-        <div>
-            <label>2015 <%= selectedLayerDisplay %></label>
+            <label>2015 <%= selectedLayerDisplayYear %></label>
             <div><%= selectedLayerValue2015 %></div>
         </div>
         <div>
-            <label>Change in <%= selectedLayerDisplay %> (2006-2015)</label>
-            <div><%= (selectedLayerValue * 100).toFixed(2) + "%" %></div>
+            <label>2006-2015: <%= selectedLayerDisplayChange %></label>
+            <div><%= (selectedLayerValue.toFixed(1)) %></div>
         </div>
-
         <a href="#" id="msa-popup-zoom" data-name="<%= geod_ms %>" >
             See MSA Census Details
         </a>
@@ -196,12 +171,8 @@
             <div><%= name_tr %></div>
         </div>
         <div>
-            <label>Change in Population Density (2010-2015)</label>
-            <div><%= pp_dns_.toFixed(1) + "%" %></div>
-        </div>
-        <div>
-            <label>Change in <%= selectedLayerDisplay %> (2010-2015)</label>
-            <div><%= selectedLayerValue.toFixed(1) + "%" %></div>
+            <label>2010-2015: <%= selectedLayerDisplay %></label>
+            <div><%= selectedLayerValue.toFixed(1) %></div>
         </div>
 
         <a href="#" id="tract-popup-zoom" data-name="<%= name %>" >

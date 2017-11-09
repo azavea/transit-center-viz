@@ -208,6 +208,8 @@ $(document).ready(function() {
             $('#selectize-ridership-chart').selectize(_.extend({}, defaults, {
                 options: nationwide.concat(msa),
                 optgroupField: 'group',
+                valueField: 'absoluteValue',
+                labelField: 'id',
                 optgroups: [
                     {value: 'nationwide', label: 'Ridership'},
                     {value: 'msa', label: 'Census'}
@@ -360,7 +362,7 @@ $(document).ready(function() {
                                 selectedLayerDisplayChange: currentLayer.text,
                                 selectedLayerDisplayYear: currentLayer.id,
                                 selectedLayerValue: msaValues[currentLayer.value],
-                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[currentLayer.value + '_y15'])
+                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[sizeVar(currentLayer.value)])
                             });
 
                         e.layer
@@ -425,6 +427,9 @@ $(document).ready(function() {
     }
 
     function sizeVar(variable) {
+        if (variable.endsWith('_c')) {
+            variable = variable.slice(0, -2);
+        }
         return (variable + '_y15');
     }
 

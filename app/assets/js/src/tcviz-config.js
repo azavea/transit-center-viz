@@ -9,120 +9,142 @@ TCVIZ.Config = {
         api_key: '73537cf8a5e88a4f170a0eda73deab782accaee2'
     },
     zoomThreshold: 7,
-    defaultNtdField: 'upt_total',
-    defaultCensusField: 'pp_dns_',
+    defaultNtdField: 'upt_total_c',
+    defaultCensusField: 'pp_dn_c',
     defaultMSA: 'NNNNN',
     ridershipChartLeftAxisDefault: 'upt_total',
     ridershipChartRightAxisDefault: 'avg_fare',
     nationwide_layers: [{
         text: 'Total Ridership (% change)',
-        value: 'upt_total',
+        value: 'upt_total_c',
+        absoluteValue: 'upt_total',
         render: 'number',
         id: 'Total Ridership'
     }, {
         text: 'Bus Ridership (% change)',
-        value: 'upt_bus',
+        value: 'upt_bus_c',
+        absoluteValue: 'upt_bus',
         render: 'number',
         id: 'Bus Ridership'
     }, {
         text: 'Rail Ridership (% change)',
-        value: 'upt_rail',
+        value: 'upt_rail_c',
+        absoluteValue: 'upt_rail',
         render: 'number',
         id: 'Rail Ridership'
     }, {
         text: 'Average Fare (gross change)',
-        value: 'avg_fare',
+        value: 'avg_fare_c',
+        absoluteValue: 'avg_fare',
         render: 'money',
         id: 'Average Fare'
     }, {
         text: 'Average Speed (gross change)',
-        value: 'average_speed',
+        value: 'average_speed_c',
+        absoluteValue: 'average_speed',
         render: 'number',
         id: 'Average Speed'
     }, {
         text: 'Farebox Recovery (gross change)',
-        value: 'farebox_recovery',
+        value: 'farebox_recovery_c',
+        absoluteValue: 'farebox_recovery',
         render: 'money',
         id: 'Farebox Recovery'
     }, {
         text: 'Vehicle Revenue Miles (% change)',
-        value: 'revenue_miles',
+        value: 'revenue_miles_c',
+        absoluteValue: 'revenue_miles',
         render: 'number',
         id: 'Vehicle Revenue Miles'
     }, {
         text: 'Expenses (% change)',
-        value: 'total_expenses',
+        value: 'total_expenses_c',
+        absoluteValue: 'total_expenses',
         render: 'money',
         id: 'Expenses'
     }, {
         text: 'Statewide Gas Prices (% change)',
-        value: 'gas',
+        value: 'gas_c',
+        absoluteValue: 'gas',
         render: 'money',
         id: 'Statewide Gas Prices'
     }],
     MSA_layers: [{
         text: 'Population Density (gross change)',
-        value: 'pp_dns_',
+        value: 'pp_dn_c',
+        absoluteValue: 'pop_dens',
         render: 'number',
         id: 'Population Density'
     }, {
         text: '% Drove Alone Commute (change total %)',
         value: 'drove_c',
+        absoluteValue: 'pct_drove_alone',
         render: 'percent',
         id: '% Drove Alone Commute'
     }, {
         text: '% Public Transit Commute (change total %)',
         value: 'trnst_c',
+        absoluteValue: 'pct_transit',
         render: 'percent',
         id: '% Public Transit Commute'
     }, {
         text: '% Carpool Commute (change total %)',
         value: 'carpl_c',
+        absoluteValue: 'pct_carpooled',
         render: 'percent',
         id: '% Carpool Commute'
     }, {
         text: '% Civilian Employed (change total %)',
         value: 'emp_c',
+        absoluteValue: 'pct_emp',
         render: 'percent',
         id: '% Civilian Employed'
     }, {
         text: '% Households with No Vehicle (change total %)',
         value: 'veh_c',
+        absoluteValue: 'pct_hh_no_vehicle',
         render: 'percent',
         id: '% Households with No Vehicle'
     }, {
         text: 'Median Household Income (gross change)',
         value: 'inc_c',
+        absoluteValue: 'med_hh_inc',
         render: 'money',
         id: 'Median Household Income'
     },{
         text: '% Families in Poverty (change total %)',
         value: 'fpov_c',
+        absoluteValue: 'pct_fam_pov',
         render: 'percent',
         id: '% Families in Poverty'
     },{
         text: '% Population Foregin Born (change total %)',
         value: 'forgn_c',
+        absoluteValue: 'pct_pop_foreign',
         render: 'percent',
         id: '% Population Foreign Born'
     }, {
         text: '% Black (change total %)',
         value: 'black_c',
+        absoluteValue: 'pct_black',
         render: 'percent',
         id: '% Black'
     }, {
         text: '% Asian (change total %)',
         value: 'asian_c',
+        absoluteValue: 'pct_asian',
         render: 'percent',
         id: '% Asian'
     }, {
         text: '% White (change total %)',
         value: 'white_c',
+        absoluteValue: 'pct_white',
         render: 'percent',
         id: '% White'
     }, {
         text: '% Hispanic/Latino of any race (change total %)',
         value: 'hisp_c',
+        absoluteValue: 'pct_hisp',
         render: 'percent',
         id: '% Hispanic/Latino of any race'
     }],
@@ -297,45 +319,45 @@ TCVIZ.Config = {
     }],
     circle_sizes: [10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 32.5, 35],
     symbol_style: {
-        upt_total: {
+        upt_total_c: {
             colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
             colorBreaks: [-0.25,-0.1,0.0,0.5,1]
         },
-        upt_bus: {
+        upt_bus_c: {
             colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
             colorBreaks: [-0.25,-0.1,0.0,0.5,1]
         },
-        upt_rail: {
+        upt_rail_c: {
             colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
             colorBreaks: [-0.25,-0.1,0.0,0.5,1]
         },
-        avg_fare: {
+        avg_fare_c: {
             colors: ['#d7191c', '#fdae61', '#ffffbf', '#a6d96a', '#1a9641'],
             colorBreaks: [-0.25,-0.1,0.0,0.1,0.5]
         },
-        farebox_recovery: {
+        farebox_recovery_c: {
             colors: ['#d7191c', '#fdae61', '#ffffbf', '#a6d96a', '#1a9641'],
             colorBreaks: [-0.05,-0.025,0.0,0.025,0.05]
         },
-        total_expenses: {
+        total_expenses_c: {
             colors: ['#dfe8b8', '#f4dd9e', '#ffab5a', '#ff6161', '#ff1717'],
             colorBreaks: [0,0.25,0.5,0.75,1]
         },
-        average_speed: {
+        average_speed_c: {
             colors: ['#008837', '#a6dba0', '#f7f7f7', '#c2a5cf', '#7b3294'],
             colorBreaks: [-0.5,-0.25,0.0,0.5,1]
         },
-        revenue_miles: {
+        revenue_miles_c: {
             colors: ['#009b9e', '#7cc5c6', '#f1f1f1', '#dda9cd', '#c75dab'],
             colorBreaks: [-0.025,0,0.25,0.5,.75]
         },
-        revenue_hours: {
+        revenue_hours_c: {
             colors: ['#009b9e', '#f3e0f7', '#d1afe8', '#9f82ce', '#63589f'],
             colorBreaks: [-0.025,0.1,0.5,0.75,1]
         },
-        //   TODO: missing cartography for: 
+        //   TODO: missing cartography for:
         //      gas (change in gas prices)
-        gas: {
+        gas_c: {
             colors: [],
             colorBreaks: []
         }
@@ -367,7 +389,7 @@ TCVIZ.Config = {
             colors: ['#d01c8b', '#f1b6da', '#f7f7f7', '#b8e186', '#4d9221'],
             colorBreaks: [10000,-5000,0,5000,10000]
         },
-        //   TODO: missing cartography for: 
+        //   TODO: missing cartography for:
         //      pp_dns_ (population density)
         //      veh_c (households no vehicle)
         //      ppov_c (households below 200% of poverty line)
@@ -376,7 +398,7 @@ TCVIZ.Config = {
         //      asian_c (Pct Asian)
         //      hisp_c (Pct Hispanic)
         //      white_c (Pct white)
-        pp_dns_: {
+        pp_dn_c: {
             colors: [],
             colorBreaks: []
         },
@@ -409,5 +431,5 @@ TCVIZ.Config = {
             colorBreaks: []
         }
     }
-    
+
 };

@@ -56,7 +56,7 @@ TCVIZ.Carto.ChartSQL = function(table, sqlConfig) {
     this.getLabelForMetric = function(metric) {
         // TODO: Move to config?
         var variables = TCVIZ.Config.nationwide_layers.concat(TCVIZ.Config.MSA_layers);
-        var variable = _.findWhere(variables, {value: metric});
-        return variable && variable.text ? variable.text : metric;
+        var variable = _.findWhere(variables, {absoluteValue: metric});
+        return variable && variable.id ? variable.id : metric;
     };
 };

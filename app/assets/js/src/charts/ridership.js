@@ -24,6 +24,9 @@ TCVIZ.Charts.Ridership = function(elementId) {
                         right: 5
                     }
                 },
+                legend:  {
+                    position: 'bottom'
+                },
                 scales: {
                     yAxes: scales
                 },

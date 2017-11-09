@@ -25,8 +25,12 @@
   top: 0;
   right: 0;
   display: flex;
-  width: 25rem;
+  width: 31rem;
   z-index: 2000;
+
+  @media (max-width: 960px) {
+    width: 25rem;
+  }
 }
 
 .map-toolbar--section {
@@ -62,23 +66,78 @@
   z-index: 400;
   background-color: #fff;
   padding: 5px;
-  border: 1px solid #ccc;
+  border: 2px solid #000;
+  padding: 1rem;
+  transform: scale(0.9);
+  transform-origin: bottom right;
 
+  @media (min-width: 661px) and (max-width: 900px) {
+    right: initial;
+    left: 20px;
+    transform-origin: bottom left;
+  }  
+
+  @media (max-width: 660px) {
+    left: 20px;
+    right: 17px;
+    width: auto;
+    transform: none;
+    bottom: 19px;
+    width: 70px;
+    height: 36px;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px #000;
+
+    &:before {
+      content: "Legend";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      font-family: Mark;
+      font-weight: 800;
+      line-height: 31px;
+      text-align: center;
+      font-size: 1.5rem;
+      text-decoration: underline;
+    }
+
+    &:hover {
+      width: auto;
+      height: auto;
+      z-index: 2001;
+
+      &:before {
+        display: none;
+      }
+    }
+  }
 }
 
 .legend-list {
   list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.legend-row {
+  flex: 1;
 }
 
 .legend-label {
-  display: inline-block;
-  width: 49px;
+  display: block;
 }
+
 .legend-swatch {
-  display: inline-block;
+  display: block;
   width: 50px;
   height: 15px;
-  border: 1px solid #ccc;
 }
 
 #legend circle {
@@ -87,10 +146,17 @@
   stroke-width: 3px;
 }
 
-.legend-low {
-  float: left;
+.legend--title {
+  margin: -1rem -1rem 0;
+  padding: 1rem;
+  border-bottom: 2px solid black;
 }
 
-.legend-high {
-  float: right;
+.circle-labels {
+  display: flex;
+  justify-content: space-between;
+}
+
+.layer-name {
+  margin-top: 0;
 }

@@ -27,6 +27,9 @@ TCVIZ.Charts.Change = function(elementId) {
                         }
                     }]
                 },
+                legend:  {
+                    position: 'bottom'
+                },
                 title: {
                     display: true,
                     text: chartTitle

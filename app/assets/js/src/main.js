@@ -345,9 +345,10 @@ $(document).ready(function() {
                         var currentLayer = _.findWhere(TCVIZ.Config.nationwide_layers, { value: valueField }),
                             msaValues = e.layer.feature.properties,
                             ctx = _.assign(msaValues, {
-                                selectedLayerDisplay: currentLayer.text,
+                                selectedLayerDisplayChange: currentLayer.text,
+                                selectedLayerDisplayYear: currentLayer.id,
                                 selectedLayerValue: msaValues[currentLayer.value],
-                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[currentLayer.value + '_2015']),
+                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[currentLayer.value + '_y15'])
                             });
 
                         e.layer

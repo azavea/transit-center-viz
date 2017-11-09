@@ -115,10 +115,11 @@ $(document).ready(function() {
      */
     function getBucket(feature, variable, breaks) {
         var v = feature.properties[variable];
-        for (var i = breaks.length; i > 0; i--) {
+        for (var i = breaks.length; i >= 0; i--) {
             if (v > breaks[i]) {
                 return i;
-            } else {
+            } 
+            if (v < breaks[0]) {
                 return 0;
             }
         }
@@ -445,23 +446,8 @@ $(document).ready(function() {
      */
     function stylePolygons(feature, colorVariable) {
         var styleData = TCVIZ.Config.polygon_style[colorVariable];
-        // var sizeVariable = sizeVar(colorVariable);
-        // var sizeBucket = getBucket(feature, sizeVariable, sizeBreaks);
-        // var size = TCVIZ.Config.circle_sizes[sizeBucket];
         var colorBucket = getBucket(feature, colorVariable, styleData.colorBreaks);
-        if (colorBucket == 4){
-            console.log("colorBucket: " + colorBucket);
-        }
-        // console.log("colorBucket: " + colorBucket);
         var color = styleData.colors[colorBucket];
-        // console.log("color: " + color);
-        // return {
-        //     radius: size,
-        //     fillOpacity: 0.8,
-        //     color: color,
-        //     opacity: 0.9,
-        //     fillColor: color
-        // };
         return {
             color: '#000000',
             fillColor: color,
@@ -471,9 +457,4 @@ $(document).ready(function() {
             fillOpacity: 0.6
         };
     }
-
-
-
-
-
 });

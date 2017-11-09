@@ -274,22 +274,110 @@ TCVIZ.Config = {
         upt_bus: {
             colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
             colorBreaks: [-0.25,-0.1,0.0,0.5,1]
+        },
+        upt_rail: {
+            colors: ['#f3e79b', '#fab27f', '#eb7f86', '#b95e9a', '#5c53a5'],
+            colorBreaks: [-0.25,-0.1,0.0,0.5,1]
+        },
+        avg_fare: {
+            colors: ['#d7191c', '#fdae61', '#ffffbf', '#a6d96a', '#1a9641'],
+            colorBreaks: [-0.25,-0.1,0.0,0.1,0.5]
+        },
+        farebox_recovery: {
+            colors: ['#d7191c', '#fdae61', '#ffffbf', '#a6d96a', '#1a9641'],
+            colorBreaks: [-0.05,-0.025,0.0,0.025,0.05]
+        },
+        total_expenses: {
+            colors: ['#dfe8b8', '#f4dd9e', '#ffab5a', '#ff6161', '#ff1717'],
+            colorBreaks: [0,0.25,0.5,0.75,1]
+        },
+        average_speed: {
+            colors: ['#008837', '#a6dba0', '#f7f7f7', '#c2a5cf', '#7b3294'],
+            colorBreaks: [-0.5,-0.25,0.0,0.5,1]
+        },
+        revenue_miles: {
+            colors: ['#009b9e', '#7cc5c6', '#f1f1f1', '#dda9cd', '#c75dab'],
+            colorBreaks: [-0.025,0,0.25,0.5,.75]
+        },
+        revenue_hours: {
+            colors: ['#009b9e', '#f3e0f7', '#d1afe8', '#9f82ce', '#63589f'],
+            colorBreaks: [-0.025,0.1,0.5,0.75,1]
+        },
+        //   TODO: missing cartography for: 
+        //      gas (change in gas prices)
+        gas: {
+            colors: [],
+            colorBreaks: []
         }
-        // add rest of the circles
     },
+
     polygon_style: {
         forgn_c: {
             colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
             colorBreaks: [-5,-3,0,3,10]
         },
-
         drove_c: {
             colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
             colorBreaks: [-10,-5,0,5,10]
         },
-        pp_dns_: {
-            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
-            colorBreaks: [-5,-3,0,3,10]
+        carpl_c: {
+            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colorBreaks: [-5,-2,0,2,5]
         },
+        trnst_c: {
+            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colorBreaks: [-5,-2,0,2,5]
+        },
+        emp_c: {
+            colors: ['#a16928', '#caa873', '#edeac2', '#98b7b2', '#2887a1'],
+            colorBreaks: [-5,-2,0,2,5]
+        },
+
+        inc_c: {
+            colors: ['#d01c8b', '#f1b6da', '#f7f7f7', '#b8e186', '#4d9221'],
+            colorBreaks: [10000,-5000,0,5000,10000]
+        },
+        //   TODO: missing cartography for: 
+        //      pp_dns_ (population density)
+        //      veh_c (households no vehicle)
+        //      ppov_c (households below 200% of poverty line)
+        //      fpov_c (undefined ?)
+        //      black_c (Pct Black)
+        //      asian_c (Pct Asian)
+        //      hisp_c (Pct Hispanic)
+        //      white_c (Pct white)
+        pp_dns_: {
+            colors: [],
+            colorBreaks: []
+        },
+        veh_c: {
+            colors: [],
+            colorBreaks: []
+        },
+        ppov_c: {
+            colors: [],
+            colorBreaks: []
+        },
+        fpov_c: {
+            colors: [],
+            colorBreaks: []
+        },
+        black_c: {
+            colors: [],
+            colorBreaks: []
+        },
+        asian_c: {
+            colors: [],
+            colorBreaks: []
+        },
+        hisp_c: {
+            colors: [],
+            colorBreaks: []
+        },
+        white_c: {
+            colors: [],
+            colorBreaks: []
+        }
     }
+    
 };

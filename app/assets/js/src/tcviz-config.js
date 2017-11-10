@@ -94,11 +94,11 @@ TCVIZ.Config = {
         render: 'percent',
         id: '% Carpool Commute'
     }, {
-        text: '% Civilian Employed (change total %)',
+        text: 'Employed Civilian (gross change)',
         value: 'emp_c',
-        absoluteValue: 'pct_emp',
-        render: 'percent',
-        id: '% Civilian Employed'
+        absoluteValue: 'tot_emp',
+        render: 'number',
+        id: 'Employed Civilian'
     }, {
         text: '% Households with No Vehicle (change total %)',
         value: 'veh_c',

@@ -94,11 +94,11 @@ TCVIZ.Config = {
         render: 'percent',
         id: '% Carpool Commute'
     }, {
-        text: '% Civilian Employed (change total %)',
+        text: 'Employed Civilian (gross change)',
         value: 'emp_c',
-        absoluteValue: 'pct_emp',
-        render: 'percent',
-        id: '% Civilian Employed'
+        absoluteValue: 'tot_emp',
+        render: 'number',
+        id: 'Employed Civilian'
     }, {
         text: '% Households with No Vehicle (change total %)',
         value: 'veh_c',
@@ -118,7 +118,7 @@ TCVIZ.Config = {
         render: 'percent',
         id: '% Families in Poverty'
     },{
-        text: '% Population Foregin Born (change total %)',
+        text: '% Population Foreign Born (change total %)',
         value: 'forgn_c',
         absoluteValue: 'pct_pop_foreign',
         render: 'percent',
@@ -363,56 +363,56 @@ TCVIZ.Config = {
 
     polygon_style: {
         forgn_c: {
-            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colors: ['#c75dab', '#dda9cd', '#f2dfec', '#7cc5c6', '#009b9e'],
             colorBreaks: [-5,-3,0,3,10]
         },
         drove_c: {
-            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colors: ['#7b3294', '#c2a5cf', '#e3d4ea', '#a6dba0', '#008837'],
             colorBreaks: [-10,-5,0,5,10]
         },
         carpl_c: {
-            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colors: ['#7b3294', '#c2a5cf', '#e3d4ea', '#a6dba0', '#008837'],
             colorBreaks: [-5,-2,0,2,5]
         },
         trnst_c: {
-            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colors: ['#7b3294', '#c2a5cf', '#e3d4ea', '#a6dba0', '#008837'],
             colorBreaks: [-5,-2,0,2,5]
         },
         emp_c: {
             colors: ['#a16928', '#caa873', '#edeac2', '#98b7b2', '#2887a1'],
-            colorBreaks: [-5,-2,0,2,5]
+            colorBreaks: [-500,-200,0,200,500]
         },
 
         inc_c: {
-            colors: ['#d01c8b', '#f1b6da', '#f7f7f7', '#b8e186', '#4d9221'],
+            colors: ['#d01c8b', '#f1b6da', '#e3d4ea', '#b8e186', '#4d9221'],
             colorBreaks: [-10000,-5000,0,5000,10000]
         },
         pp_dn_c: {
-            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colors: ['#c75dab', '#dda9cd', '#f2dfec', '#7cc5c6', '#009b9e'],
             colorBreaks: [-1000,-50,0,50,1000]
         },
         veh_c: {
-            colors: ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837'],
+            colors: ['#7b3294', '#c2a5cf', '#e3d4ea', '#a6dba0', '#008837'],
             colorBreaks: [-5,-2,0,2,5]
         },
         fpov_c: {
-            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b'],
+            colors: ['#4dac26', '#b8e186', '#e3d4ea', '#f1b6da', '#d01c8b'],
             colorBreaks: [-5,-2,0,2,5]
         },
         black_c: {
-            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colors: ['#c75dab', '#dda9cd', '#f2dfec', '#7cc5c6', '#009b9e'],
             colorBreaks: [-5,-2,0,2,5]
         },
         asian_c: {
-            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colors: ['#c75dab', '#dda9cd', '#f2dfec', '#7cc5c6', '#009b9e'],
             colorBreaks: [-5,-2,0,2,5]
         },
         hisp_c: {
-            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colors: ['#c75dab', '#dda9cd', '#f2dfec', '#7cc5c6', '#009b9e'],
             colorBreaks: [-5,-2,0,2,5]
         },
         white_c: {
-            colors: ['#c75dab', '#dda9cd', '#F1F1F1', '#7cc5c6', '#009b9e'],
+            colors: ['#c75dab', '#dda9cd', '#f2dfec', '#7cc5c6', '#009b9e'],
             colorBreaks: [-5,-2,0,2,5]
         }
     }

@@ -21,6 +21,7 @@ TCVIZ.Charts.Change = function(elementId) {
                 datasets: datasets
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: scales
                 },

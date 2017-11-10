@@ -18,6 +18,7 @@ TCVIZ.Charts.Ridership = function(elementId) {
                 datasets: datasets
             },
             options: {
+                maintainAspectRatio: false,
                 layout: {
                     padding: {
                         left: 5,

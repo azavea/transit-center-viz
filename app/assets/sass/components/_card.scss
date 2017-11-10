@@ -45,12 +45,12 @@
   display: flex;
   flex-wrap: wrap;
 
-  &.chart-card {
-    max-height: 300px;
+  &.chart-card-short {
+    height: 250px;
+  }
 
-    @media (max-width: 900px) {
-      max-height: initial;
-    }
+  &.chart-card-tall {
+    height: 300px;
   }
 
   .selectize {

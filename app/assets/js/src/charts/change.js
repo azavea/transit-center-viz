@@ -60,6 +60,9 @@ TCVIZ.Charts.Change = function(elementId) {
     }), _.extend({}, this.yLeftDefaults, {
         label: 'Bus Ridership Change (%)',
         borderColor: '#65f033'
+    }), _.extend({}, this.yLeftDefaults, {
+        label: 'Employed Change (%)',
+        borderColor: '#00c0ec'
     })];
 
     this.ctx = document.getElementById(elementId).getContext('2d');

@@ -436,7 +436,7 @@ $(document).ready(function() {
     function setChangeChart(msaId) {
         if (!msaId) { return; }
 
-        var metrics = ['pop_chg', 'upt_rail_chg', 'upt_bus_chg'];
+        var metrics = ['pop_chg', 'upt_rail_chg', 'upt_bus_chg', 'emp_chg'];
         TCVIZ.Connections.chartSql.getTransitData(msaId, metrics)
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql

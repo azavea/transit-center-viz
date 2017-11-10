@@ -17,8 +17,7 @@ $(document).ready(function() {
     var layerToggle = null;
     var msaToggle = null;
     var ridershipChartToggle = null;
-    var featureGroup = {};
-    var nationWide = isNationWide();
+    var featureGroup = null;
 
     /*
      Initialize objects
@@ -40,12 +39,15 @@ $(document).ready(function() {
         yPadding: 10,
         titleMarginBottom: 10
     });
+    _.extend(Chart.defaults.global.defaultFontFamily = 'Mark');
     var ridershipChart = new TCVIZ.Charts.Ridership('time-series-1');
     var changeChart = new TCVIZ.Charts.Change('time-series-2');
 
     TCVIZ.Templates = {
         msaPopup: _.template($('#msa-popup-tmpl').html()),
         tractPopup: _.template($('#tract-popup-tmpl').html()),
+        legend: _.template($('#ramp-legend-tmpl').html()),
+        legendCircle: _.template($('#circle-legend-tmpl').html()),
     };
 
     /*
@@ -57,23 +59,28 @@ $(document).ready(function() {
     Listeners
      */
     layerToggle.on('change', function() {
-        setMap();
+        setMap(msaToggle.getValue(), layerToggle.getValue());
     });
     msaToggle.on('change', function() {
         var msaId = msaToggle.getValue();
-        setRidershipChart(msaId, TCVIZ.Config.ridershipChartLeftAxisDefault, ridershipChartToggle.getValue());
+
+        // Updates layer toggle which triggers map layer updates
+        updateMapDropdown();
+
+        setRidershipChart(
+            msaId,
+            TCVIZ.Config.ridershipChartLeftAxisDefault,
+            ridershipChartToggle.getValue());
         setChangeChart(msaId);
 
         // Auto zoom map to selected MSA, or zoom out if National Average selected
-        if (msaId === TCVIZ.Config.defaultMSA) {
+        if (isNationWide()) {
             map.setView(TCVIZ.Config.map.center, TCVIZ.Config.map.zoom);
         } else {
             TCVIZ.Connections.msaMap.getBBoxForMSA(msaId).done(function(bbox) {
                 map.fitBounds(bbox);
             });
         }
-
-        // TODO: May need to readd setMap() call here
     });
     ridershipChartToggle.on('change', function(value) {
         var msaId = msaToggle.getValue();
@@ -97,9 +104,6 @@ $(document).ready(function() {
         msaToggle.setValue(TCVIZ.Config.defaultMSA);
     });
 
-    map.on('zoomstart', onZoomStart);
-    map.on('zoomend', onZoomEnd);
-
     /*
     Functions--------------------------------------------------------------
      */
@@ -110,7 +114,7 @@ $(document).ready(function() {
      * @param  {Array}
      */
     function changeToggle(select, layer_options) {
-        select.clear();
+        select.clear(true);     // Do not fire change event when cleared
         select.clearOptions();
         select.addOption(layer_options);
     }
@@ -125,10 +129,10 @@ $(document).ready(function() {
     function getBucket(feature, variable, breaks) {
         var v = feature.properties[variable];
         for (var i = breaks.length; i >= 0; i--) {
-            if (v > breaks[i]) {
+            if (v >= breaks[i]) {
                 return i;
             }
-            if (v < breaks[0]) {
+            if (v <= breaks[0]) {
                 return 0;
             }
         }
@@ -150,15 +154,6 @@ $(document).ready(function() {
     }
 
     /**
-     * Determine whether the app is zoomed out beyond nationwide
-     * mapping threshhold
-     * @return {Boolean}
-     */
-    function isNationWide() {
-        return (map.getZoom() <= TCVIZ.Config.zoomThreshold);
-    }
-
-    /**
      * Initialize app
      */
     function initialize() {
@@ -168,9 +163,10 @@ $(document).ready(function() {
          */
         setUpSelectize();
         setUpEventListeners();
-        setMapDropdownValue();
-        setMap();
+        updateMapDropdown();
 
+        setMap(TCVIZ.Config.defaultMSA, TCVIZ.Config.defaultNtdField);
+        setLegend(TCVIZ.Config.defaultNtdField);
         setChangeChart(TCVIZ.Config.defaultMSA);
         setRidershipChart(
             msaToggle.getValue(),
@@ -216,7 +212,6 @@ $(document).ready(function() {
                 ]
             }));
             ridershipChartToggle = $('#selectize-ridership-chart')[0].selectize;
-            //ridershipChartToggle.setValue(TCVIZ.Config.ridershipChartRightAxisDefault);
         }
 
         function setUpSidebarToggle() {
@@ -224,34 +219,6 @@ $(document).ready(function() {
                 el.preventDefault();
                 $('.sidebar').toggleClass('active');
             });
-        }
-    }
-
-    /**
-     * React to start of change in zoom level, set state boolean
-     * variable indicating whether the zoom started above or below
-     * the zoom threshold
-     */
-    function onZoomStart() {
-        TCVIZ.State.startNationWide = isNationWide();
-    }
-
-    /**
-     * React to end zoom level, changing the map content if threshold was
-     * passed
-     */
-    function onZoomEnd() {
-        nationWide = isNationWide();
-        if (TCVIZ.State.startNationWide !== nationWide) {
-            if (nationWide) {
-                changeToggle(layerToggle, TCVIZ.Config.nationwide_layers);
-                setMapDropdownValue();
-                TCVIZ.State.ntdField = layerToggle.items[0];
-            } else {
-                changeToggle(layerToggle, TCVIZ.Config.MSA_layers);
-                setMapDropdownValue();
-                TCVIZ.State.censusField = layerToggle.items[0];
-            }
         }
     }
 
@@ -268,14 +235,49 @@ $(document).ready(function() {
     /**
      * Send a layer to the map calling function based on map zoom
      */
-    function setMap() {
+    function setMap(msaId, layerId) {
         if (isNationWide()) {
-            setNationalGeoJSONLayer();
+            setNationalGeoJSONLayer(layerId);
         } else {
-            setMSAGeoJSONLayer();
+            setMSAGeoJSONLayer(msaId, layerId);
         }
     }
 
+    function setLegend(layerId) {
+        var style = isNationWide() ? 'symbol_style' : 'polygon_style',
+            layerConfig = TCVIZ.Config[style][layerId];
+
+        // Symbology may not have been defined
+        if (!layerConfig) {
+            $('#legend-inner').html('');
+            return;
+        }
+
+        if (isNationWide()) {
+            var circleCtx = {
+                    layerName: '2015: ' + nationalLabelForKey(layerId, 'id'),
+                    lowVal: _.first(TCVIZ.State.sizeBreaks),
+                    highVal: _.last(TCVIZ.State.sizeBreaks),
+                },
+                breakCtx = _.assign(layerConfig, {
+                    layerName: nationalLabelForKey(layerId, 'text'),
+                });
+
+            $('#legend-inner').html(TCVIZ.Templates.legend(breakCtx));
+            if (TCVIZ.State.sizeBreaks) {
+                $('#legend-circle-inner').html(TCVIZ.Templates.legendCircle(circleCtx));
+            }
+        } else {
+            var useLayerConfig = true;
+            var ctx = _.assign(layerConfig, {
+                layerName: msaLabelForId(layerId, useLayerConfig),
+            });
+
+            $('#legend-inner').html(TCVIZ.Templates.legend(ctx));
+            $('#legend-circle-inner').html('');
+        }
+
+    }
 
     function renderFormat(renderer, val) {
         if (val === null || val === undefined) { return 'Not Available'; }
@@ -293,86 +295,82 @@ $(document).ready(function() {
     /**
      * Set polygon layer of MSAs
      */
-    function setMSAGeoJSONLayer() {
-        var valueField = layerToggle.items[0];
-        var msaId = msaToggle.items[0];
-        if (valueField !== undefined) {
-            if (map.hasLayer(featureGroup)) {
-                map.removeLayer(featureGroup);
-            }
-            TCVIZ.State.censusField = valueField;
-            TCVIZ.Connections.tractMap.getJson(valueField, msaId)
-                .done(function(data) {
-                    data = removeNAs(data, valueField);
-                    featureGroup = L.geoJson(data, {
-                        style: function(feature) {
-                            return stylePolygons(feature, valueField);
-                        }
-                    });
-                    map.addLayer(featureGroup);
+    function setMSAGeoJSONLayer(msaId, layerId) {
+        if (!layerId) { return; }
+        var valueField = layerId;
 
-                    featureGroup.on('click', function(e) {
-                        // Construct a template context object with the current msa
-                        // plus the values for the selected msa variables and render
-                        // all in the popup template
-                        var currentLayer = _.findWhere(TCVIZ.Config.MSA_layers, { value: valueField }),
-                            msaValues = e.layer.feature.properties,
-                            ctx = _.assign(msaValues, {
-                                selectedLayerDisplay: currentLayer.text,
-                                selectedLayerValue: msaValues[currentLayer.value],
-                            });
-
-                        e.layer
-                            .bindPopup(TCVIZ.Templates.tractPopup(ctx))
-                            .openPopup();
-                    });
+        TCVIZ.State.censusField = valueField;
+        TCVIZ.Connections.tractMap.getJson(valueField, msaId)
+            .done(function(data) {
+                data = removeNAs(data, valueField);
+                var layer = L.geoJson(data, {
+                    style: function(feature) {
+                        return stylePolygons(feature, valueField);
+                    }
                 });
-        }
+
+                layer.on('click', function(e) {
+                    // Construct a template context object with the current msa
+                    // plus the values for the selected msa variables and render
+                    // all in the popup template
+                    var currentLayer = _.findWhere(TCVIZ.Config.MSA_layers, { value: valueField }),
+                        msaValues = e.layer.feature.properties,
+                        ctx = _.assign(msaValues, {
+                            selectedLayerDisplay: currentLayer.text,
+                            selectedLayerValue: msaValues[currentLayer.value],
+                        });
+
+                    e.layer
+                        .bindPopup(TCVIZ.Templates.tractPopup(ctx))
+                        .openPopup();
+                });
+
+                updateMapLayer(layer);
+                setLegend(valueField);
+            });
     }
 
     /**
      * Set a nationwide point layer
      */
-    function setNationalGeoJSONLayer() {
-        var valueField = layerToggle.items[0];
-        if (valueField !== undefined) {
-            if (map.hasLayer(featureGroup)) {
-                map.removeLayer(featureGroup);
-            }
-            TCVIZ.State.ntdField = valueField;
-            TCVIZ.Connections.msaMap.getJson(valueField)
-                .done(function(data) {
-                    data = removeNAs(data, valueField);
-                    var sizeBreaks = getBreaks(data, sizeVar(valueField), 10);
-                    featureGroup = L.geoJson(data, {
-                        pointToLayer: function(feature, latlng) {
-                            return new L.CircleMarker(latlng,
-                                styleCircles(feature, valueField, sizeBreaks)
-                            );
-                        }
-                    });
+    function setNationalGeoJSONLayer(layerId) {
+        if (!layerId) { return; }
+        var valueField = layerId;
 
-                    featureGroup.on('click', function(e) {
-                        // Construct a template context object with the current msa
-                        // plus the values for the selected msa variables and render
-                        // all in the popup template
-                        var currentLayer = _.findWhere(TCVIZ.Config.nationwide_layers, { value: valueField }),
-                            msaValues = e.layer.feature.properties,
-                            ctx = _.assign(msaValues, {
-                                selectedLayerDisplayChange: currentLayer.text,
-                                selectedLayerDisplayYear: currentLayer.id,
-                                selectedLayerValue: msaValues[currentLayer.value],
-                                selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[sizeVar(currentLayer.value)])
-                            });
-
-                        e.layer
-                            .bindPopup(TCVIZ.Templates.msaPopup(ctx))
-                            .openPopup();
-                    });
-
-                    map.addLayer(featureGroup);
+        TCVIZ.State.ntdField = valueField;
+        TCVIZ.Connections.msaMap.getJson(valueField)
+            .done(function(data) {
+                data = removeNAs(data, valueField);
+                TCVIZ.State.sizeBreaks = getBreaks(data, sizeVar(valueField), 10);
+                var layer = L.geoJson(data, {
+                    pointToLayer: function(feature, latlng) {
+                        return new L.CircleMarker(latlng,
+                            styleCircles(feature, valueField, TCVIZ.State.sizeBreaks)
+                        );
+                    }
                 });
-        }
+
+                layer.on('click', function(e) {
+                    // Construct a template context object with the current msa
+                    // plus the values for the selected msa variables and render
+                    // all in the popup template
+                    var currentLayer = _.findWhere(TCVIZ.Config.nationwide_layers, { value: valueField }),
+                        msaValues = e.layer.feature.properties,
+                        ctx = _.assign(msaValues, {
+                            selectedLayerDisplayChange: currentLayer.text,
+                            selectedLayerDisplayYear: currentLayer.id,
+                            selectedLayerValue: msaValues[currentLayer.value],
+                            selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[sizeVar(currentLayer.value)])
+                        });
+
+                    e.layer
+                        .bindPopup(TCVIZ.Templates.msaPopup(ctx))
+                        .openPopup();
+                });
+
+                updateMapLayer(layer);
+                setLegend(valueField);
+            });
     }
 
     /**
@@ -395,7 +393,7 @@ $(document).ready(function() {
     function setChangeChart(msaId) {
         if (!msaId) { return; }
 
-        var metrics = ['pop_chg', 'upt_rail_chg', 'upt_bus_chg'];
+        var metrics = ['pop_chg', 'upt_rail_chg', 'upt_bus_chg', 'emp_chg'];
         TCVIZ.Connections.chartSql.getTransitData(msaId, metrics)
             .done(function (data) {
                 var chartData = TCVIZ.Connections.chartSql
@@ -405,25 +403,30 @@ $(document).ready(function() {
             });
     }
 
+    function updateMapLayer(layer) {
+        if (featureGroup) {
+            map.removeLayer(featureGroup);
+        }
+        featureGroup = layer;
+        map.addLayer(layer);
+    }
+
     /**
      * Set the default/stored map variable value for the current
      * zoom level
      */
-    function setMapDropdownValue() {
-        nationWide = isNationWide();
-        if (nationWide) {
-            if (TCVIZ.State.ntdField !== undefined) {
-                layerToggle.setValue(TCVIZ.State.ntdField);
-            } else {
-                layerToggle.setValue(TCVIZ.Config.defaultNtdField);
-            }
+    function updateMapDropdown() {
+        var layerValue;
+        if (isNationWide()) {
+            changeToggle(layerToggle, TCVIZ.Config.nationwide_layers);
+            layerValue = TCVIZ.State.ntdField || TCVIZ.Config.defaultNtdField;
+            TCVIZ.State.ntdField = layerToggle.items[0];
         } else {
-            if (TCVIZ.State.censusField !== undefined) {
-                layerToggle.setValue(TCVIZ.State.censusField);
-            } else {
-                layerToggle.setValue(TCVIZ.Config.defaultCensusField);
-            }
+            changeToggle(layerToggle, TCVIZ.Config.MSA_layers);
+            layerValue = TCVIZ.State.censusField || TCVIZ.Config.defaultCensusField;
+            TCVIZ.State.censusField = layerToggle.items[0];
         }
+        layerToggle.setValue(layerValue);
     }
 
     function sizeVar(variable) {
@@ -447,7 +450,7 @@ $(document).ready(function() {
             radius: size,
             fillOpacity: 0.8,
             color: '#000000',
-            width: 0.5,
+            weight: 0.5,
             opacity: 0.9,
             fillColor: color
         };
@@ -470,8 +473,22 @@ $(document).ready(function() {
         };
     }
 
-    function msaLabelForId(msaId) {
-        var msa = _.findWhere(TCVIZ.Config.MSA_list, {value: msaId});
+    function isNationWide() {
+        return msaToggle.getValue() === TCVIZ.Config.defaultMSA;
+    }
+
+    /**
+     * For a given layer ID, return the text label.  Defaults to
+     * MSA_list unless `useLayerConfig` param is set to true
+     */
+    function msaLabelForId(msaId, useLayerConfig) {
+        var config = useLayerConfig ? TCVIZ.Config.MSA_layers : TCVIZ.Config.MSA_list;
+        var msa = _.findWhere(config, {value: msaId});
         return msa && msa.text ? msa.text : msaId;
+    }
+
+    function nationalLabelForKey(layerId, key) {
+        var layer = _.findWhere(TCVIZ.Config.nationwide_layers, {value: layerId});
+        return layer && layer[key] ? layer[key]: layerId;
     }
 });

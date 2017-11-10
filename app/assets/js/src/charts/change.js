@@ -3,6 +3,8 @@ TCVIZ.Charts.Change = function(elementId) {
 
     this.update = function(chartTitle, datasets) {
         var self = this;
+        datasets[0] = _.extend({}, this.yLeftDefaults, datasets[0]);
+        var scales = [this.yScaleLeft];
         _.each(datasets, function(data, index) {
             delete data.label;
             _.extend(data, self.datasets[index]);
@@ -19,13 +21,12 @@ TCVIZ.Charts.Change = function(elementId) {
                 datasets: datasets
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
-
-                        ticks: {
-                            callback: TCVIZ.Charts.Formatters.number
-                        }
-                    }]
+                    yAxes: scales
+                },
+                legend:  {
+                    position: 'bottom'
                 },
                 title: {
                     display: true,
@@ -47,9 +48,22 @@ TCVIZ.Charts.Change = function(elementId) {
         });
     };
 
+    this.yScaleLeft = {
+        position: 'left',
+        'id': 'y-axis-left',
+        scaleLabel: {
+            display: true,
+            labelString: 'Relative Change (%)'
+        },
+        ticks: {
+            callback: TCVIZ.Charts.Formatters.number
+        }
+    };
     this.labels = _.range(2010, 2016);
     this.yLeftDefaults = {
-        fill: false
+        borderColor: '#3165f0',
+        fill: false,
+        yAxisID: 'y-axis-left'
     };
     this.datasets = [_.extend({}, this.yLeftDefaults, {
         label: 'Population Change (%)',
@@ -60,6 +74,9 @@ TCVIZ.Charts.Change = function(elementId) {
     }), _.extend({}, this.yLeftDefaults, {
         label: 'Bus Ridership Change (%)',
         borderColor: '#65f033'
+    }), _.extend({}, this.yLeftDefaults, {
+        label: 'Employed Change (%)',
+        borderColor: '#00c0ec'
     })];
 
     this.ctx = document.getElementById(elementId).getContext('2d');

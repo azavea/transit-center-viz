@@ -64,13 +64,15 @@
       <div class="sidebar--inner">
         <!-- Card of content -->
         <div class="card">
-          <select name="" id="selectize-ridership-chart" class="selectize" placeholder="Select a second variable for comparison"></select>
-          <div class="card--inner chart-card">
+          <div class="card--inner">
+            <select name="" id="selectize-ridership-chart" class="selectize" placeholder="Select a second variable for comparison"></select>
+          </div>
+          <div class="card--inner chart-card-short">
             <canvas id="time-series-1"></canvas>
           </div>
         </div>
         <div class="card">
-          <div class="card--inner chart-card">
+          <div class="card--inner chart-card-tall">
             <canvas id="time-series-2"></canvas>
           </div>
         </div>
@@ -92,6 +94,12 @@
       <!-- Map toolbar -->
       <!-- Leaflet map here -->
       <div class="map-inner" id="map">
+      </div>
+      <div class="legend" id="legend">
+        <div id="legend-inner">
+        </div>
+        <div id="legend-circle-inner">
+        </div>
       </div>
     </div>
     <!-- Map -->
@@ -180,7 +188,44 @@
         </a>
     </div>
   </script>
+
+  <script id="ramp-legend-tmpl" type="text/template">
+    <div>
+        <h6 class="layer-name"><%= layerName %></h6>
+        <ul class="legend-list">
+            <% _.each(colors, function(item, idx) { %>
+                <li class="legend-row">
+                    <% if (idx === colors.length-1) { %>
+                        <label class="legend-label">&#62; <%=colorBreaks[idx-1]%></label>
+                    <% } else { %>
+                        <label class="legend-label">&#60; <%=colorBreaks[idx]%></label>
+                    <% } %>
+                    <div class="legend-swatch"
+                          style="background-color: <%=item%>;"></div>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+  </script>
+
+  <script id="circle-legend-tmpl" type="text/template">
+    <div>
+        <h6><%= layerName %></h6>
+        <svg width="280" height="80">
+          <!--Radius sizes were selected from the configured circle_sizes -->
+          <circle cx="40" cy="40" r="10"></circle>
+          <circle cx="80" cy="40" r="15"></circle>
+          <circle cx="135" cy="40" r="25"></circle>
+          <circle cx="210" cy="40" r="35"></circle>
+        </svg>
+        <div class="circle-labels">
+            <span class="legend-low">&#60; <%= lowVal.toLocaleString() %></span>
+            <span class="legend-high">&#62; <%= highVal.toLocaleString() %></span>
+        </div>
+    </div>
+  </script>
   <!-- scripts -->
+
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>

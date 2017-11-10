@@ -18,11 +18,15 @@ TCVIZ.Charts.Ridership = function(elementId) {
                 datasets: datasets
             },
             options: {
+                maintainAspectRatio: false,
                 layout: {
                     padding: {
                         left: 5,
                         right: 5
                     }
+                },
+                legend:  {
+                    position: 'bottom'
                 },
                 scales: {
                     yAxes: scales

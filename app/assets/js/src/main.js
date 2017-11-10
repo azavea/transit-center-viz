@@ -450,7 +450,7 @@ $(document).ready(function() {
             radius: size,
             fillOpacity: 0.8,
             color: '#000000',
-            width: 0.5,
+            weight: 0.5,
             opacity: 0.9,
             fillColor: color
         };

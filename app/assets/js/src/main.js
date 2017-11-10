@@ -283,10 +283,12 @@ $(document).ready(function() {
         if (val === null || val === undefined) { return 'Not Available'; }
 
         switch (renderer) {
+        case 'percent':
+            return val.toFixed(1) + '%';
         case 'number':
             return val.toLocaleString();
         case 'money':
-            return '$' + val.toLocaleString();
+            return '$ ' + val.toLocaleString();
         default:
             return val;
         }
@@ -316,8 +318,11 @@ $(document).ready(function() {
                     var currentLayer = _.findWhere(TCVIZ.Config.MSA_layers, { value: valueField }),
                         msaValues = e.layer.feature.properties,
                         ctx = _.assign(msaValues, {
-                            selectedLayerDisplay: currentLayer.text,
-                            selectedLayerValue: msaValues[currentLayer.value],
+                            selectedLayerDisplayChange: currentLayer.text,
+                            selectedLayerDisplayYear: currentLayer.id,
+                            selectedLayerValue: renderFormat(currentLayer.renderChange, msaValues[currentLayer.value]),
+                            selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[sizeVar(currentLayer.value)]),
+                            selectedLayerValue2010: renderFormat(currentLayer.render, msaValues[y10Var(currentLayer.value)])
                         });
 
                     e.layer
@@ -359,10 +364,10 @@ $(document).ready(function() {
                         ctx = _.assign(msaValues, {
                             selectedLayerDisplayChange: currentLayer.text,
                             selectedLayerDisplayYear: currentLayer.id,
-                            selectedLayerValue: msaValues[currentLayer.value],
-                            selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[sizeVar(currentLayer.value)])
+                            selectedLayerValue: renderFormat(currentLayer.renderChange, msaValues[currentLayer.value]),
+                            selectedLayerValue2015: renderFormat(currentLayer.render, msaValues[sizeVar(currentLayer.value)]),
+                            selectedLayerValue2006: renderFormat(currentLayer.render, msaValues[y06Var(currentLayer.value)])
                         });
-
                     e.layer
                         .bindPopup(TCVIZ.Templates.msaPopup(ctx))
                         .openPopup();
@@ -430,10 +435,25 @@ $(document).ready(function() {
     }
 
     function sizeVar(variable) {
-        if (variable.endsWith('_c')) {
+
+        if (_.last(variable, 2).join('') === '_c') {
             variable = variable.slice(0, -2);
         }
         return (variable + '_y15');
+    }
+
+    function y06Var(variable) {
+        if (_.last(variable, 2).join('') === '_c') {
+            variable = variable.slice(0, -2);
+        }
+        return (variable + '_y06');
+    }
+
+    function y10Var(variable) {
+        if (_.last(variable, 2).join('') === '_c') {
+            variable = variable.slice(0, -2);
+        }
+        return (variable + '_y10');
     }
 
     /**

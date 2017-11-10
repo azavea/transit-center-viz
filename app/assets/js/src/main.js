@@ -435,21 +435,23 @@ $(document).ready(function() {
     }
 
     function sizeVar(variable) {
-        if (variable.endsWith('_c')) {
+
+        if (_.last(variable, 2).join('') === '_c') {
             variable = variable.slice(0, -2);
         }
+        console.log(variable + '_y15');
         return (variable + '_y15');
     }
 
     function y06Var(variable) {
-        if (variable.endsWith('_c')) {
+        if (_.last(variable, 2).join('') === '_c') {
             variable = variable.slice(0, -2);
         }
         return (variable + '_y06');
     }
 
     function y10Var(variable) {
-        if (variable.endsWith('_c')) {
+        if (_.last(variable, 2).join('') === '_c') {
             variable = variable.slice(0, -2);
         }
         return (variable + '_y10');

@@ -40,6 +40,7 @@ $(document).ready(function() {
         yPadding: 10,
         titleMarginBottom: 10
     });
+    _.extend(Chart.defaults.global.defaultFontFamily = 'Mark');
     var ridershipChart = new TCVIZ.Charts.Ridership('time-series-1');
     var changeChart = new TCVIZ.Charts.Change('time-series-2');
 

@@ -64,7 +64,9 @@
       <div class="sidebar--inner">
         <!-- Card of content -->
         <div class="card">
-          <select name="" id="selectize-ridership-chart" class="selectize" placeholder="Select a second variable for comparison"></select>
+          <div class="card--inner">
+            <select name="" id="selectize-ridership-chart" class="selectize" placeholder="Select a second variable for comparison"></select>
+          </div>
           <div class="card--inner chart-card">
             <canvas id="time-series-1"></canvas>
           </div>
@@ -94,7 +96,6 @@
       <div class="map-inner" id="map">
       </div>
       <div class="legend" id="legend">
-        <h4>Legend</h4>
         <div id="legend-inner">
         </div>
         <div id="legend-circle-inner">
@@ -190,7 +191,7 @@
 
   <script id="ramp-legend-tmpl" type="text/template">
     <div>
-        <h6><%= layerName %></h6>
+        <h6 class="layer-name"><%= layerName %></h6>
         <ul class="legend-list">
             <% _.each(colors, function(item, idx) { %>
                 <li class="legend-row">
@@ -217,7 +218,7 @@
           <circle cx="135" cy="40" r="25"></circle>
           <circle cx="210" cy="40" r="35"></circle>
         </svg>
-        <div>
+        <div class="circle-labels">
             <span class="legend-low">&#60; <%= lowVal.toLocaleString() %></span>
             <span class="legend-high">&#62; <%= highVal.toLocaleString() %></span>
         </div>

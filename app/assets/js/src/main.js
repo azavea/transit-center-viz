@@ -129,10 +129,10 @@ $(document).ready(function() {
     function getBucket(feature, variable, breaks) {
         var v = feature.properties[variable];
         for (var i = breaks.length; i >= 0; i--) {
-            if (v > breaks[i]) {
+            if (v >= breaks[i]) {
                 return i;
             }
-            if (v < breaks[0]) {
+            if (v <= breaks[0]) {
                 return 0;
             }
         }
